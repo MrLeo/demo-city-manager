@@ -1,7 +1,6 @@
 <template>
   <div class="banner">
-    <div class="logo"></div>
-    <h1>信阳智慧城市综合管理平台</h1>
+    <div class="logo">信阳智慧城市综合管理平台</div>
   </div>
 </template>
 
@@ -11,8 +10,28 @@ export default {}
 
 <style lang="scss" scoped>
 .banner {
-  width: 1920px;
-  height: 75px;
+  $h: 75px;
+
+  width: 100%;
+  height: $h;
   background-color: #041541;
+  display: flex;
+
+  .logo {
+    height: 100%;
+    padding-left: 93px;
+    background: url('../assets/logo.png') no-repeat left center/contain;
+    text-align: left;
+
+    flex: 1;
+    line-height: $h;
+    font-family: PingFangSC-Semibold;
+    font-size: 24px;
+    font-weight: normal;
+    font-stretch: normal;
+    letter-spacing: 0px;
+    color: #ffffff;
+    text-shadow: 0px 3px 8px rgba(65, 115, 255, 0.82);
+  }
 }
 </style>
