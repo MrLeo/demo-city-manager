@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: 'PageMenu',
   data() {
     return {
       menus: [
