@@ -1,43 +1,45 @@
 <template>
   <div id="app">
     <PageBanner></PageBanner>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="main">
+      <PageMenu class="menu"></PageMenu>
+      <router-view />
     </div>
-    <router-view />
   </div>
 </template>
 
 <script>
 import PageBanner from './components/PageBanner.vue'
+import PageMenu from './components/PageMenu.vue'
 
 export default {
   components: {
-    PageBanner
+    PageBanner,
+    PageMenu
   }
 }
 </script>
 
 <style lang="scss">
 #app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  background-image: linear-gradient(90deg, #021541 0%, #0e2257 51%, #040d2b 100%);
+  color: #fff;
 }
 
-#nav {
-  padding: 30px;
+.main {
+  flex: 1;
+  display: flex;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  & + .menu {
+    width: 200px;
+    height: 1008px;
+    background-color: #0d1a44;
   }
 }
 </style>
