@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <PageBanner></PageBanner>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -7,6 +8,15 @@
     <router-view />
   </div>
 </template>
+
+<script>
+import PageBanner from './components/PageBanner.vue'
+export default {
+  components: {
+    PageBanner
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
