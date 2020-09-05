@@ -17,11 +17,11 @@ export default {
     return {
       menus: [
         { title: '智慧大屏', path: '/', icon: require('../assets/ic-menu/1.png') },
-        { title: '智慧管理', path: '/about', icon: require('../assets/ic-menu/2.png') },
-        { title: '报警列表', path: '/about', icon: require('../assets/ic-menu/3.png') },
-        { title: '数据分析', path: '/about', icon: require('../assets/ic-menu/4.png') },
-        { title: '用户管理', path: '/about', icon: require('../assets/ic-menu/5.png') },
-        { title: '系统设置', path: '/about', icon: require('../assets/ic-menu/6.png') }
+        { title: '智慧管理', path: '/2', icon: require('../assets/ic-menu/2.png') },
+        { title: '报警列表', path: '/3', icon: require('../assets/ic-menu/3.png') },
+        { title: '数据分析', path: '/4', icon: require('../assets/ic-menu/4.png') },
+        { title: '用户管理', path: '/5', icon: require('../assets/ic-menu/5.png') },
+        { title: '系统设置', path: '/6', icon: require('../assets/ic-menu/6.png') }
       ]
     }
   }
