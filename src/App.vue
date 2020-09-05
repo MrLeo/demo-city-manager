@@ -26,7 +26,8 @@ export default {
 @import './assets/scss/base.scss';
 
 .app {
-  height: 100%;
+  min-height: 100%;
+  width: 1920px;
   display: flex;
   flex-direction: column;
   font-family: Avenir, Helvetica, Arial, sans-serif;

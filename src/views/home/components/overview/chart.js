@@ -1,8 +1,23 @@
 // https://vue-chartjs.org/zh-cn/
 
+import _ from 'lodash'
 import { Line, mixins } from 'vue-chartjs'
 
-export const LineChart = () => ({
+function hexToRgba(hex, opacity) {
+  return (
+    'rgba(' +
+    parseInt('0x' + hex.slice(1, 3)) +
+    ',' +
+    parseInt('0x' + hex.slice(3, 5)) +
+    ',' +
+    parseInt('0x' + hex.slice(5, 7)) +
+    ',' +
+    opacity +
+    ')'
+  )
+}
+
+export const LineChart = {
   extends: Line,
   mixins: [mixins.reactiveProp],
   props: {
@@ -13,16 +28,25 @@ export const LineChart = () => ({
     styles: {
       type: Object,
       default() {
-        return { width: '225px', height: '190px' }
+        return { width: '223px', height: '129px' }
       }
+    },
+    borderColor: {
+      type: String,
+      default: '#ff5910'
+    },
+    borderWidth: {
+      type: Number,
+      default: 2
+    },
+    pointRadius: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
       gradient: null,
-      borderColor: '#ff5910',
-      borderWidth: 2,
-      pointRadius: 0,
       defaultOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -37,9 +61,9 @@ export const LineChart = () => ({
     }
   },
   computed: {
-    chartDatas() {
+    getChartData() {
       return {
-        labels: new Array(this.chartData.datasets.length).fill(''),
+        labels: _.fill(Array(this.chartData.datasets.length), ''),
         datasets: [
           {
             borderColor: this.borderColor,
@@ -50,37 +74,43 @@ export const LineChart = () => ({
           }
         ]
       }
+    },
+    getOptions() {
+      let min = _.min(this.chartData.datasets)
+      return _.merge(
+        this.defaultOptions,
+        {
+          scales: {
+            xAxes: [{ display: false }],
+            yAxes: [
+              {
+                display: false,
+                ticks: { min: _.lt(min, 50) ? 0 : min - 50 }
+              }
+            ]
+          }
+        },
+        this.options
+      )
     }
   },
   watch: {
     chartData() {
-      this.$data._chart.update()
+      this.setGradient()
+      setTimeout(() => this.$data._chart.update(), 0)
     }
-  }
-})
-
-export const AlarmChart = {
-  ...LineChart(),
+  },
   mounted() {
-    this.borderColor = '#ff5910'
-    this.gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450)
-    this.gradient.addColorStop(0, 'rgba(255, 0,0, 0.5)')
-    this.gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.25)')
-    this.gradient.addColorStop(1, 'rgba(255, 0, 0, 0)')
+    this.setGradient()
+    this.renderChart(this.getChartData, this.getOptions)
+  },
+  methods: {
+    setGradient() {
+      this.gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 130)
 
-    this.renderChart(this.chartDatas, { ...this.defaultOptions, ...this.options })
-  }
-}
-
-export const DeviceChart = {
-  ...LineChart(),
-  mounted() {
-    this.borderColor = '#2bfff0'
-    this.gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450)
-    this.gradient.addColorStop(0, 'rgba(43,255,240, 0.5)')
-    this.gradient.addColorStop(0.5, 'rgba(43,255,240, 0.25)')
-    this.gradient.addColorStop(1, 'rgba(43,255,240, 0)')
-
-    this.renderChart(this.chartDatas, { ...this.defaultOptions, ...this.options })
+      this.gradient.addColorStop(0, hexToRgba(this.borderColor, 0.5))
+      this.gradient.addColorStop(0.5, hexToRgba(this.borderColor, 0.25))
+      this.gradient.addColorStop(1, hexToRgba(this.borderColor, 0))
+    }
   }
 }
