@@ -1,0 +1,17 @@
+/* stylelint-disable */
+
+/*
+ * @Company: 智联招聘
+ * @Author: xuebin.me
+ * @LastEditors: Leo
+ * @version: 0.0.0
+ * @Description: 函数
+ */
+
+@charset "UTF-8";
+
+// #region REM
+@function rem($pixels) {
+  @return $pixels / 100px * 1rem;
+}
+// #endregion

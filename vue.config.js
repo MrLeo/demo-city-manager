@@ -11,6 +11,9 @@ module.exports = {
     loaderOptions: {
       less: {
         lessOptions: {
+          modifyVars: {
+            'text-color': '#FFFFFF'
+          },
           javascriptEnabled: true
         }
       }

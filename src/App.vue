@@ -1,9 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" class="app colunm">
     <PageBanner></PageBanner>
-    <div class="main">
-      <PageMenu class="menu"></PageMenu>
-      <router-view />
+    <div class="app__main row">
+      <PageMenu class="app__menu"></PageMenu>
+      <div class="app__content">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
@@ -21,7 +23,9 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
+@import './assets/scss/base.scss';
+
+.app {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -30,16 +34,17 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   background-image: linear-gradient(90deg, #021541 0%, #0e2257 51%, #040d2b 100%);
   color: #fff;
-}
 
-.main {
-  flex: 1;
-  display: flex;
+  &__main {
+    flex: 1;
+  }
 
-  & + .menu {
-    width: 200px;
-    height: 1008px;
-    background-color: #0d1a44;
+  &__content {
+    flex: 1;
+  }
+
+  .page {
+    padding: 25px;
   }
 }
 </style>

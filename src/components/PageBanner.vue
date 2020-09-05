@@ -22,7 +22,7 @@ export default {
   .logo {
     height: 100%;
     padding-left: 93px;
-    background: url('../assets/logo.png') no-repeat left center/contain;
+    background: url('../assets/images/logo.png') no-repeat left center/contain;
     text-align: left;
 
     flex: 1;

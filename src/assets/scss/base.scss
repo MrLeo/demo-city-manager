@@ -1,0 +1,20 @@
+/* stylelint-disable */
+
+/*
+ * @Company: 智联招聘
+ * @Author: xuebin.me
+ * @version: 0.0.0
+ * @Description: 基础样式
+ * https://devhints.io/sass
+ * https://www.sass.hk/
+ * https://www.kancloud.cn/kancloud/sass-guidelin/48049
+ */
+
+@charset "utf-8";
+
+@import 'variable';
+@import 'fun';
+@import 'mixin';
+@import 'reset';
+@import 'common';
+@import 'ant-design';
