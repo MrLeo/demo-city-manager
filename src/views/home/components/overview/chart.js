@@ -1,7 +1,8 @@
 // https://vue-chartjs.org/zh-cn/
 
 import _ from 'lodash'
-import { Doughnut, Line, mixins } from 'vue-chartjs'
+import { Line, mixins } from 'vue-chartjs'
+import { ShadowDoughnut } from './custom-chart'
 
 export const hexToRgba = (hex, opacity) => {
   return (
@@ -117,7 +118,7 @@ export const LineChart = {
 }
 
 export const DoughnutChart = {
-  extends: Doughnut,
+  extends: ShadowDoughnut,
   mixins: [mixins.reactiveProp],
   props: {
     options: {
@@ -182,10 +183,6 @@ export const DoughnutChart = {
   methods: {
     setGradient() {
       const ctx = this.$refs.canvas.getContext('2d')
-
-      ctx.shadowBlur = 10
-      ctx.shadowOffsetX = 5
-      ctx.shadowColor = hexToRgba(this.borderColor, 0.5)
 
       this.gradient = ctx.createLinearGradient(100, 0, 0, 0)
       this.gradient.addColorStop(0, hexToRgba(this.borderColor, 1))
