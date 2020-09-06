@@ -169,3 +169,25 @@ export default {
   }
 }
 </style>
+<style>
+.amap-touch-toolbar .amap-zoomcontrol {
+  display: flex;
+  flex-direction: column;
+  width: 64px;
+  height: 120px;
+  background-color: rgba(8, 32, 89, 0.8);
+}
+.amap-zoom-touch-plus,
+.amap-zoom-touch-minus {
+  flex: 1;
+  background-color: rgba(8, 32, 89, 0.8);
+}
+.amap-touch-toolbar .amap-zoomcontrol::after {
+  display: none;
+}
+.amap-zoom-touch-plus > div,
+.amap-zoom-touch-minus > div {
+  color: #fff;
+  line-height: 55px;
+}
+</style>
