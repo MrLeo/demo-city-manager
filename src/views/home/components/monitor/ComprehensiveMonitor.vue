@@ -84,28 +84,36 @@ export default {
         console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
       })
 
-      _.forEach(this.alarms, item => this.loadMarks({ iconStyle: item.color }))
-    },
-    loadMarks({ iconStyle = 'red' }) {
-      //引入SimpleMarker，loadUI的路径参数为模块名中 'ui/' 之后的部分
-      AMapUI.loadUI(['overlay/SimpleMarker'], SimpleMarker => {
-        _.forEach(Array(4), (value, index) => {
-          new SimpleMarker({
-            iconLabel: index + 1, //前景文字
-            iconStyle: `<div style="background:${iconStyle};width:20px;height:20px;border-radius: 50%;"></div>`, //背景图标样式
-            map: this.map,
-            position: gps(114.091058, 32.148624, 10000)
-          })
-        })
+      _.forEach(this.alarms, (item, index) => {
+        const marker = this.loadMarker({ iconStyle: item.color })
+        this.markers.splice(index, 1, marker)
+        this.map.add(marker)
       })
     },
-    onAlarmClick(alarm) {
+    loadMarker({ iconStyle = 'red' }) {
+      return _.map(
+        Array(4),
+        (value, index) =>
+          new AMap.Marker({
+            position: new AMap.LngLat(...gps(114.091058, 32.148624, 10000)), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+            content: `<div style="border:1px solid ${iconStyle};width:20px;height:20px;border-radius: 50%;text-align: center;">${index +
+              1}</div>`, // 自定义点标记覆盖物内容
+            offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
+            anchor: 'bottom-center' // 设置锚点方位
+          })
+      )
+    },
+    onAlarmClick(alarm, index) {
       const disableAlarms = _.filter(this.alarms, 'disable')
 
       if (_.size(disableAlarms) === 0) {
-        _.forEach(this.alarms, alarm => (alarm.disable = true))
+        _.forEach(this.alarms, (alarm, i) => {
+          alarm.disable = true
+          this.map.remove(this.markers[i])
+        })
       }
 
+      this.map.add(this.markers[index])
       alarm.disable = false
     }
   }
@@ -194,6 +202,7 @@ export default {
   height: 120px;
   background-color: rgba(8, 32, 89, 0.8);
   box-shadow: none;
+  border: none;
 }
 .amap-zoom-touch-plus,
 .amap-zoom-touch-minus {
