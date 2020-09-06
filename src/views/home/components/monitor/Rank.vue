@@ -37,12 +37,14 @@ export default {
   data() {
     return {
       alarms: {
+        // TODO 报警类型
         percent: [
           { value: 15.2, color: '#4880ff', label: '城管' },
           { value: 13.8, color: '#24ccb8', label: '国土' },
           { value: 9.7, color: '#ffc400', label: '空气' },
           { value: 9.1, color: '#ff5660', label: '路灯' }
         ],
+        // TODO 报警地点排行
         rank: [
           { value: 23, label: '胜利东路' },
           { value: 11, label: '胜利西路大学城西口' },

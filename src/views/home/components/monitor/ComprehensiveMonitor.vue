@@ -37,6 +37,7 @@ import { gps } from '../../../../util/random'
 export default {
   data() {
     return {
+      // TODO 报警事件
       alarms: [
         { label: '城管报警', count: 4, ratio: 1, color: '#f00', disable: false },
         { label: '国土资源报警', count: 4, ratio: 1, color: '#f27022', disable: false },
@@ -94,6 +95,7 @@ export default {
       return _.map(
         Array(4),
         (value, index) =>
+          // TODO 报警事件Marker
           new AMap.Marker({
             position: new AMap.LngLat(...gps(114.091058, 32.148624, 10000)), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
             content: `<div style="border:1px solid ${iconStyle};width:20px;height:20px;border-radius: 50%;text-align: center;">${index +
