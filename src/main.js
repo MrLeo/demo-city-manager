@@ -5,10 +5,12 @@ import store from './store'
 
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.less'
+import IconFont from '@/components/IconFont/IconFont'
 
 Vue.config.productionTip = false
 
 Vue.use(Antd)
+Vue.use(IconFont)
 
 new Vue({
   router,
