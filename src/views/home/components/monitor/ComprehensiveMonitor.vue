@@ -53,10 +53,9 @@ export default {
   methods: {
     // 初始化地图
     initMap() {
-      let toolbar = null
-
       // 创建地图
       this.map = new AMap.Map('container', {
+        // MARK 自定义地图样式 https://lbs.amap.com/dev/mapstyle/index
         mapStyle: 'amap://styles/darkblue',
         features: ['bg', 'road'],
         resizeEnable: true, // 是否监控地图容器尺寸变化，默认值为false
@@ -69,14 +68,14 @@ export default {
         // showLabel: true, // 显示地图文字标记
       })
 
+      // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
       this.map.plugin(['AMap.ToolBar'], () => {
-        // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
-        toolbar = new AMap.ToolBar({
-          // 简易缩放模式，默认为 false
-          liteStyle: true,
-          position: 'RT'
-        })
-        this.map.addControl(toolbar)
+        this.map.addControl(
+          new AMap.ToolBar({
+            liteStyle: true, // 简易缩放模式，默认为 false
+            position: 'RT'
+          })
+        )
       })
 
       this.map.on('zoomchange', () => {

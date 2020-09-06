@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { DoughnutChart } from './chart.js'
+import { DoughnutChart } from '../chart.js'
 
 export default {
   components: { DoughnutChart },

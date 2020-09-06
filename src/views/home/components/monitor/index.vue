@@ -1,7 +1,10 @@
 <template>
-  <div class="column monitor">
-    <Tabs v-model="tab"></Tabs>
-    <component :is="tab"></component>
+  <div class="row monitor">
+    <div class="column main">
+      <Tabs v-model="tab"></Tabs>
+      <component :is="tab"></component>
+    </div>
+    <Rank></Rank>
   </div>
 </template>
 
@@ -11,6 +14,7 @@ import ComprehensiveMonitor from './ComprehensiveMonitor.vue'
 import AirQuality from './AirQuality.vue'
 import WisdomTheWatch from './WisdomTheWatch.vue'
 import DepartmentHomeland from './DepartmentHomeland.vue'
+import Rank from './Rank.vue'
 
 export default {
   components: {
@@ -18,7 +22,8 @@ export default {
     ComprehensiveMonitor,
     AirQuality,
     WisdomTheWatch,
-    DepartmentHomeland
+    DepartmentHomeland,
+    Rank
   },
   data() {
     return {
@@ -30,7 +35,15 @@ export default {
 
 <style lang="scss" scoped>
 .monitor {
-  width: 1244px;
-  background-color: #0a1944;
+  .main {
+    width: 1244px;
+    background-color: #0a1944;
+  }
+}
+</style>
+<style>
+.amap-logo {
+  display: none !important;
+  opacity: 0 !important;
 }
 </style>

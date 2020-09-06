@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { LineChart } from './chart.js'
+import { LineChart } from '../chart.js'
 
 export default {
   components: { LineChart },
@@ -37,7 +37,7 @@ export default {
         return {
           count: 0,
           comparedWithChange: 0,
-          datasets: []
+          datasets: [0]
         }
       }
     }

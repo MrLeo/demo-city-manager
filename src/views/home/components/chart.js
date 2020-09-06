@@ -1,7 +1,7 @@
 // https://vue-chartjs.org/zh-cn/
 
 import _ from 'lodash'
-import { Line, mixins } from 'vue-chartjs'
+import { Doughnut, Line, mixins } from 'vue-chartjs'
 import { ShadowDoughnut } from './custom-chart'
 
 export const hexToRgba = (hex, opacity) => {
@@ -22,6 +22,7 @@ export const LineChart = {
   extends: Line,
   mixins: [mixins.reactiveProp],
   props: {
+    // chart-data: { count: 0, comparedWithChange: 0, datasets: [0] }
     options: {
       type: Object,
       default: null
@@ -121,6 +122,7 @@ export const DoughnutChart = {
   extends: ShadowDoughnut,
   mixins: [mixins.reactiveProp],
   props: {
+    // chart-data: { title: '已处理', value: 0, color: '#0EA7FD' },
     options: {
       type: Object,
       default: null
@@ -128,7 +130,7 @@ export const DoughnutChart = {
     styles: {
       type: Object,
       default() {
-        return { width: '121px', height: '120px', position: 'relative' }
+        return { width: '120px', height: '120px', position: 'relative' }
       }
     },
     borderColor: {
@@ -138,6 +140,10 @@ export const DoughnutChart = {
     borderWidth: {
       type: Number,
       default: 0
+    },
+    cutoutPercentage: {
+      type: Number,
+      default: 85
     }
   },
   data() {
@@ -149,7 +155,7 @@ export const DoughnutChart = {
         legend: { display: false },
         tooltip: { enabled: false },
         title: { display: false },
-        cutoutPercentage: 85
+        cutoutPercentage: this.cutoutPercentage
       }
     }
   },
@@ -173,6 +179,7 @@ export const DoughnutChart = {
   },
   watch: {
     chartData() {
+      this.setGradient()
       setTimeout(() => this.$data._chart.update(), 0)
     }
   },
@@ -189,5 +196,74 @@ export const DoughnutChart = {
       this.gradient.addColorStop(0.5, hexToRgba(this.borderColor, 0.5))
       this.gradient.addColorStop(1, hexToRgba(this.borderColor, 1))
     }
+  }
+}
+
+export const AlarmDoughnutChart = {
+  extends: Doughnut,
+  mixins: [mixins.reactiveProp],
+  props: {
+    // chart-data: { percent: [{ value: 15.2, color: '#4880ff', label: '城管' }] },
+    options: {
+      type: Object,
+      default: null
+    },
+    styles: {
+      type: Object,
+      default() {
+        return { width: '154px', height: '154px', position: 'relative' }
+      }
+    },
+    borderColor: {
+      type: String,
+      default: 'rgba(0,0,0,0)'
+    },
+    borderWidth: {
+      type: Number,
+      default: 0
+    },
+    cutoutPercentage: {
+      type: Number,
+      default: 85
+    }
+  },
+  data() {
+    return {
+      gradient: null,
+      defaultOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: { display: false },
+        tooltip: { enabled: false },
+        title: { display: false },
+        cutoutPercentage: this.cutoutPercentage
+      }
+    }
+  },
+  computed: {
+    getChartData() {
+      return {
+        labels: _.fill(Array(this.chartData.percent.length), ''),
+        datasets: [
+          {
+            borderWidth: this.borderWidth,
+            borderColor: this.borderColor,
+            backgroundColor: _.map(this.chartData.percent || [], 'color'),
+            data: _.map(this.chartData.percent, 'value')
+          }
+        ]
+      }
+    },
+    getOptions() {
+      return _.merge(this.defaultOptions, this.options)
+    }
+  },
+  watch: {
+    chartData() {
+      setTimeout(() => this.$data._chart.update(), 0)
+    }
+  },
+  mounted() {
+    this.renderChart(this.getChartData, this.getOptions)
   }
 }
