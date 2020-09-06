@@ -44,7 +44,6 @@ export default {
         { label: '空气污染报警', count: 4, ratio: -1, color: '#ffdf00', disable: false },
         { label: '路灯报警', count: 4, ratio: -1, color: '#179eff', disable: false }
       ],
-      mapZoom: 12,
       marker: {}, // 点标记
       markers: [], // 点集合
       map: {} // 地图对象
@@ -63,9 +62,9 @@ export default {
         features: ['bg', 'road'],
         resizeEnable: true, // 是否监控地图容器尺寸变化，默认值为false
         expandZoomRange: false, // 是否支持可以扩展最大缩放级别,和zooms属性配合使用设置为true的时候，zooms的最大级别在PC上可以扩大到20级，移动端还是高清19/非高清20
-        center: [114.091058, 32.148624], // 地图中心位置
+        center: [114.091058, 32.148624], // TODO 地图中心位置
         zooms: [4, 16], // 缩放范围
-        zoom: this.mapZoom, // 初始缩放级别
+        zoom: 12, // TODO 初始缩放级别
         cursor: 'pointer',
         defaultCursor: 'pointer' // 变成小手 地图默认鼠标样式。参数defaultCursor应符合CSS的cursor属性规范
         // showLabel: true, // 显示地图文字标记
