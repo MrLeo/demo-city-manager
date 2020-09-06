@@ -32,6 +32,8 @@
 
 <script>
 import _ from 'lodash'
+import { gps } from '../../../../util/random'
+
 export default {
   data() {
     return {
@@ -80,6 +82,22 @@ export default {
 
       this.map.on('zoomchange', () => {
         console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
+      })
+
+      // TODO
+      this.loadMarks()
+    },
+    loadMarks() {
+      //引入SimpleMarker，loadUI的路径参数为模块名中 'ui/' 之后的部分
+      AMapUI.loadUI(['overlay/SimpleMarker'], SimpleMarker => {
+        _.map(Array(4), () => {
+          new SimpleMarker({
+            iconLabel: 'A', //前景文字
+            iconStyle: 'red', //背景图标样式
+            map: this.map,
+            position: gps(114.091058, 32.148624, 10000)
+          })
+        })
       })
     },
     onAlarmClick(alarm) {
@@ -176,6 +194,7 @@ export default {
   width: 64px;
   height: 120px;
   background-color: rgba(8, 32, 89, 0.8);
+  box-shadow: none;
 }
 .amap-zoom-touch-plus,
 .amap-zoom-touch-minus {
