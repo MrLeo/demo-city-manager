@@ -35,6 +35,7 @@ export default {
 
 <style lang="scss" scoped>
 .monitor {
+  align-items: flex-start;
   .main {
     width: 1244px;
     background-color: #0a1944;
