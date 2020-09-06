@@ -79,8 +79,7 @@ export default {
       })
 
       this.map.on('zoomchange', () => {
-        var zoom = this.map.getZoom() //获取当前地图级别
-        console.log(`[LOG]: initMap -> zoom`, zoom)
+        console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
       })
     },
     onAlarmClick(alarm) {

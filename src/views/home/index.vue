@@ -13,10 +13,7 @@ import Monitor from './components/monitor'
 
 export default {
   name: 'Home',
-  components: { Breadcrumb, Overview, Monitor },
-  data() {
-    return {}
-  }
+  components: { Breadcrumb, Overview, Monitor }
 }
 </script>
 
