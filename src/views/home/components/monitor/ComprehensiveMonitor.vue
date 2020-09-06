@@ -84,16 +84,15 @@ export default {
         console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
       })
 
-      // TODO
-      this.loadMarks()
+      _.forEach(this.alarms, item => this.loadMarks({ iconStyle: item.color }))
     },
-    loadMarks() {
+    loadMarks({ iconStyle = 'red' }) {
       //引入SimpleMarker，loadUI的路径参数为模块名中 'ui/' 之后的部分
       AMapUI.loadUI(['overlay/SimpleMarker'], SimpleMarker => {
-        _.map(Array(4), () => {
+        _.forEach(Array(4), (value, index) => {
           new SimpleMarker({
-            iconLabel: 'A', //前景文字
-            iconStyle: 'red', //背景图标样式
+            iconLabel: index + 1, //前景文字
+            iconStyle: `<div style="background:${iconStyle};width:20px;height:20px;border-radius: 50%;"></div>`, //背景图标样式
             map: this.map,
             position: gps(114.091058, 32.148624, 10000)
           })
