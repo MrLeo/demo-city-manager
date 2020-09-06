@@ -27,7 +27,7 @@ export default {
 
 .app {
   min-height: 100%;
-  width: 1920px;
+  min-width: 1920px;
   display: flex;
   flex-direction: column;
   font-family: Avenir, Helvetica, Arial, sans-serif;

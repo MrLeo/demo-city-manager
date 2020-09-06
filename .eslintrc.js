@@ -13,7 +13,9 @@ module.exports = {
     __GLOBAL__: true,
     __PLATFORM__: true,
     __PLATFORM_TITLE__: true,
-    __PLATFORM_PREFIX__: true
+    __PLATFORM_PREFIX__: true,
+    AMap: false,
+    AMapUI: false
   },
 
   extends: ["plugin:vue/essential", "eslint:recommended", "@vue/prettier"],

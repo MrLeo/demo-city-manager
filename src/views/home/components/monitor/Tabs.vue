@@ -22,16 +22,16 @@ export default {
       type: Array,
       default() {
         return [
-          { key: 1, label: '综合监控' },
-          { key: 2, label: '空气质量' },
-          { key: 3, label: '智慧城管' },
-          { key: 4, label: '国土监测' }
+          { key: 'ComprehensiveMonitor', label: '综合监控' },
+          { key: 'AirQuality', label: '空气质量' },
+          { key: 'WisdomTheWatch', label: '智慧城管' },
+          { key: 'DepartmentHomeland', label: '国土监测' }
         ]
       }
     },
     value: {
-      type: Number,
-      default: 1
+      type: String,
+      default: 'ComprehensiveMonitor'
     }
   }
 }
