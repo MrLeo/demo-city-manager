@@ -1,24 +1,5 @@
-# city-manager
+# 链接
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- [图表](https://www.chartjs.org/)
+- [自定义地图](https://lbs.amap.com/dev/mapstyle/index)
+- [高德地图](https://lbs.amap.com/api/javascript-api/summary)
