@@ -1,8 +1,8 @@
 <template>
   <div class="overview row">
-    <div class="overview__card--1 ">
+    <div class="overview__card ">
       <h1 class="title">今日报警数</h1>
-      <div class="row">
+      <div class="row" style="justify-content: space-between;">
         <div style="margin-right: 40px">
           <h2 class="data red">{{ alarm.count }}</h2>
           <span
@@ -17,10 +17,10 @@
         <LineChart :chart-data="alarm" border-color="#ff5910"></LineChart>
       </div>
     </div>
-    <div class="overview__card--1 row">
+    <div class="overview__card">
       <h1 class="title">连接设备数</h1>
-      <div class="row">
-        <div style="margin-right: 40px">
+      <div class="row" style="justify-content: space-between;">
+        <div>
           <h2 class="data blue">{{ device.count }}</h2>
           <span
             class="compared"
@@ -34,16 +34,33 @@
         <LineChart :chart-data="device" border-color="#2bfff0"></LineChart>
       </div>
     </div>
+    <div class="overview__card" style="flex: 1;">
+      <h1 class="title">报警处理</h1>
+      <div class="row" style="justify-content: space-around;">
+        <div v-for="(action, key) in actions" :key="key" class="doughnut-chart">
+          <div class="doughnut-chart__data">
+            <span class="value">{{ action.value }}</span>
+            <i class="unit">%</i>
+            <p class="title">{{ action.title }}</p>
+          </div>
+          <DoughnutChart
+            class="doughnut-chart__chart"
+            :chart-data="action"
+            :border-color="action.color"
+          ></DoughnutChart>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { LineChart } from './chart.js'
+import { LineChart, DoughnutChart } from './chart.js'
 import _ from 'lodash'
 
 export default {
   name: 'Overview',
-  components: { LineChart },
+  components: { LineChart, DoughnutChart },
 
   data() {
     return {
@@ -56,6 +73,11 @@ export default {
         count: 7907,
         comparedWithChange: 13,
         datasets: _.map(Array(10), () => _.random(7907))
+      },
+      actions: {
+        done: { title: '已处理', value: 75, color: '#0EA7FD' },
+        todo: { title: '待处理', value: 19, color: '#FF710C' },
+        ignore: { title: '不受理', value: 3, color: '#0EA7FD' }
       }
     }
   }
@@ -66,10 +88,11 @@ export default {
 .overview {
   margin-top: 29px;
   margin-left: 15px;
-  &__card--1 {
-    width: 410px;
+  &__card {
+    min-width: 410px;
     height: 186px;
     align-items: flex-end;
+    margin-right: 40px;
 
     .title {
       font-family: HiraginoSansGB-W6;
@@ -123,6 +146,30 @@ export default {
       }
       &--down::before {
         content: '↓';
+      }
+    }
+
+    .doughnut-chart {
+      position: relative;
+
+      &__data {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      &::before {
+        content: '';
+        display: inline-block;
+        width: calc(100% - 5px);
+        height: calc(100% - 5px);
+        // width: 119px;
+        // height: 119px;
+        border: solid 4px #14337d;
+        border-radius: 50%;
+
+        @extend .doughnut-chart__data;
       }
     }
   }
