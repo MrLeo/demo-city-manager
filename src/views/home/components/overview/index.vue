@@ -39,15 +39,12 @@
       <div class="row" style="justify-content: space-around;">
         <div v-for="(action, key) in actions" :key="key" class="doughnut-chart">
           <div class="doughnut-chart__data">
-            <span class="value">{{ action.value }}</span>
-            <i class="unit">%</i>
-            <p class="title">{{ action.title }}</p>
+            <span class="doughnut-chart__value"
+              >{{ action.value }}<i class="doughnut-chart__unit">%</i></span
+            >
+            <p class="doughnut-chart__title">{{ action.title }}</p>
           </div>
-          <DoughnutChart
-            class="doughnut-chart__chart"
-            :chart-data="action"
-            :border-color="action.color"
-          ></DoughnutChart>
+          <DoughnutChart :chart-data="action" :border-color="action.color"></DoughnutChart>
         </div>
       </div>
     </div>
@@ -148,29 +145,59 @@ export default {
         content: '↓';
       }
     }
+  }
 
-    .doughnut-chart {
-      position: relative;
+  .doughnut-chart {
+    position: relative;
 
-      &__data {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+    &__data {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -28px);
+    }
 
-      &::before {
-        content: '';
-        display: inline-block;
-        width: calc(100% - 5px);
-        height: calc(100% - 5px);
-        // width: 119px;
-        // height: 119px;
-        border: solid 4px #14337d;
-        border-radius: 50%;
+    &__value {
+      line-height: 40px;
+      font-family: Arial-Black;
+      font-size: 36px;
+      font-weight: normal;
+      font-stretch: normal;
+      letter-spacing: 0px;
+      color: #ffffff;
+    }
 
-        @extend .doughnut-chart__data;
-      }
+    &__unit {
+      font-family: HiraginoSansGB-W6;
+      font-size: 20px;
+      font-weight: normal;
+      letter-spacing: 0px;
+      color: #ffffff;
+    }
+
+    &__title {
+      text-align: center;
+      font-family: HiraginoSansGB-W6;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      letter-spacing: 0px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: calc(100% - 5px);
+      height: calc(100% - 5px);
+      // width: 119px;
+      // height: 119px;
+      border: solid 4px #14337d;
+      border-radius: 50%;
+
+      @extend .doughnut-chart__data;
+
+      transform: translate(-50%, -50%);
     }
   }
 }
