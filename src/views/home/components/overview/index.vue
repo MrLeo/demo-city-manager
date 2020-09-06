@@ -26,11 +26,11 @@ export default {
         comparedWithChange: 13,
         datasets: _.map(Array(10), () => _.random(7907))
       },
-      actions: {
-        done: { title: '已处理', value: 75, color: '#0EA7FD' },
-        todo: { title: '待处理', value: 19, color: '#FF710C' },
-        ignore: { title: '不受理', value: 3, color: '#0EA7FD' }
-      }
+      actions: [
+        { title: '已处理', value: 75, color: '#0EA7FD' },
+        { title: '待处理', value: 19, color: '#FF710C' },
+        { title: '不受理', value: 3, color: '#0EA7FD' }
+      ]
     }
   }
 }

@@ -23,13 +23,13 @@ export default {
   props: {
     title: { type: String, default: '' },
     chartData: {
-      type: Object,
+      type: [Array, Object],
       default() {
-        return {
-          done: { title: '已处理', value: 0, color: '#0EA7FD' },
-          todo: { title: '待处理', value: 0, color: '#FF710C' },
-          ignore: { title: '不受理', value: 0, color: '#0EA7FD' }
-        }
+        return [
+          { title: '已处理', value: 0, color: '#0EA7FD' },
+          { title: '待处理', value: 0, color: '#FF710C' },
+          { title: '不受理', value: 0, color: '#0EA7FD' }
+        ]
       }
     }
   }
