@@ -49,6 +49,7 @@ export default {
   methods: {
     initData() {
       this.initMap()
+      this.geoDistrictExplorer()
       this.getAlarms()
       this.initMarkers()
     },
@@ -81,6 +82,65 @@ export default {
 
         this.map.on('zoomchange', () => {
           console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
+        })
+      })
+    },
+    geoDistrictExplorer() {
+      const renderAreaNode = (districtExplorer, areaNode) => {
+        //清除已有的绘制内容
+        districtExplorer.clearFeaturePolygons()
+
+        //just some colors
+        var colors = [
+          '#3366cc',
+          '#dc3912',
+          '#ff9900',
+          '#109618',
+          '#990099',
+          '#0099c6',
+          '#dd4477',
+          '#66aa00'
+        ]
+
+        //绘制子级区划
+        districtExplorer.renderSubFeatures(areaNode, (feature, i) => {
+          var fillColor = colors[i % colors.length]
+          var strokeColor = colors[colors.length - 1 - (i % colors.length)]
+
+          return {
+            cursor: 'default',
+            bubble: true,
+            strokeColor: strokeColor, //线颜色
+            strokeOpacity: 1, //线透明度
+            strokeWeight: 1, //线宽
+            fillColor: fillColor, //填充色
+            fillOpacity: 0.35 //填充透明度
+          }
+        })
+
+        //绘制父级区划，仅用黑色描边
+        districtExplorer.renderParentFeature(areaNode, {
+          cursor: 'default',
+          bubble: true,
+          strokeColor: 'black', //线颜色
+          fillColor: null,
+          strokeWeight: 3 //线宽
+        })
+
+        //更新地图视野以适合区划面
+        this.map.setFitView(districtExplorer.getAllFeaturePolygons())
+      }
+
+      AMapUI.loadUI(['geo/DistrictExplorer'], DistrictExplorer => {
+        const districtExplorer = new DistrictExplorer({
+          eventSupport: true, //打开事件支持
+          map: this.map // 关联到地图
+        })
+        const adcode = 411500 //全国的区划编码
+        districtExplorer.loadAreaNode(adcode, function(error, areaNode) {
+          console.error(error)
+          if (error) return
+          renderAreaNode(districtExplorer, areaNode) //绘制载入的区划节点
         })
       })
     },
