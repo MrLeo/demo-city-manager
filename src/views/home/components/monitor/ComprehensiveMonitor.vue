@@ -262,7 +262,22 @@ export default {
   }
 }
 </style>
-<style>
+<style lang="scss">
+.marker {
+  width: 44px;
+  height: 55px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+
+  @for $site from 1 through 4 {
+    &.site#{$site} {
+      background-image: url(../../../../assets/images/ic-map-marker/site#{$site}.png);
+    }
+  }
+}
+
 .amap-touch-toolbar .amap-zoomcontrol {
   display: flex;
   flex-direction: column;
