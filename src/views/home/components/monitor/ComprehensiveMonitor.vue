@@ -74,13 +74,34 @@ export default {
           //   ratio: 1, // 事件同比变化（>0:上涨，<0:下降）
           //   color: '#ff0000', // 事件颜色
           //   disable: false, // 禁用激活
-          //   list: [ // 地图标记点
+          //   list: [
+          //     // 地图标记点
           //     {
           //       lng: 114.091058, // 经度
           //       lat: 32.148624, // 纬度
           //       source: '高点监测', // 来源
           //       time: '2020-09-07 15:53:12', // 时间
           //       position: '天府新区胜利东路456号', // 地点
+          //       // 视频信息
+          //       video: {
+          //         cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png', // 视频封面
+          //         // 视频源
+          //         source: [
+          //           {
+          //             src: 'https://media.vued.vanthink.cn/sparkle_your_name_am360p.mp4',
+          //             resolution: 360
+          //           },
+          //           {
+          //             src: 'https://media.vued.vanthink.cn/sparkle_your_name_am720p.mp4',
+          //             resolution: 720
+          //           },
+          //           {
+          //             src:
+          //               'https://media.vued.vanthink.cn/y2mate.com%20-%20sparkle_your_name_amv_K_7To_y9IAM_1080p.mp4',
+          //             resolution: 1080
+          //           }
+          //         ]
+          //       },
           //
           //       // 城管、国土
           //       camera: 'CCVT123', // 摄像机
@@ -88,10 +109,15 @@ export default {
           //       state: '确认中', // 状态
           //
           //       // 空气
-          //       空气质量级别，AQI，PM2.5，PM10
+          //       qualityLevel: 1, // 空气质量级别
+          //       AQI: 2,
+          //       PM2: 3,
+          //       PM10: 4,
           //
           //       // 灯联网的
-          //       集中器，灯编号，当前状态
+          //       concentrator: 'AWK', // 集中器
+          //       lampNumber: 'A0001', // 灯编号
+          //       lampState: '正常' //当前状态
           //     }
           //   ]
           // },
@@ -113,16 +139,49 @@ export default {
           alarm.ratio = _.random(-1, 1)
           alarm.list = _.map(Array(alarm.count), () => {
             const { lng, lat } = gps(115.221717, 32.0189, 40000)
-            return {
+            const listItem = {
+              lng,
+              lat,
               source: '高点监测',
               time: '2020-09-07 15:53:12',
               position: '天府新区胜利东路456号',
-              camera: 'CCVT123',
-              angle: _.random(0, 360),
-              state: '确认中',
-              lng,
-              lat
+
+              video: {
+                cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png',
+                source: [
+                  {
+                    src: 'https://media.vued.vanthink.cn/sparkle_your_name_am360p.mp4',
+                    resolution: 360
+                  },
+                  {
+                    src: 'https://media.vued.vanthink.cn/sparkle_your_name_am720p.mp4',
+                    resolution: 720
+                  },
+                  {
+                    src:
+                      'https://media.vued.vanthink.cn/y2mate.com%20-%20sparkle_your_name_amv_K_7To_y9IAM_1080p.mp4',
+                    resolution: 1080
+                  }
+                ]
+              }
             }
+            if (['site1', 'site2'].includes(alarm.key)) {
+              listItem.camera = 'CCVT123' // 摄像机
+              listItem.angle = _.random(0, 360) // 方位角
+              listItem.state = '确认中' // 状态
+            }
+            if (alarm.key === 'site3') {
+              listItem.qualityLevel = 1
+              listItem.AQI = 2
+              listItem.PM2 = 3
+              listItem.PM10 = 4
+            }
+            if (alarm.key === 'site4') {
+              listItem.concentrator = 'AWK'
+              listItem.lampNumber = 'A0001'
+              listItem.lampState = '正常'
+            }
+            return listItem
           })
           return alarm
         })
