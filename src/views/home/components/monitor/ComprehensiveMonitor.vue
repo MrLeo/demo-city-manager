@@ -37,23 +37,21 @@ import { gps } from '../../../../util/random'
 export default {
   data() {
     return {
-      // TODO 报警事件
-      alarms: [
-        { label: '城管报警', count: 4, ratio: 1, color: '#f00', disable: false },
-        { label: '国土资源报警', count: 4, ratio: 1, color: '#f27022', disable: false },
-        { label: '空气污染报警', count: 4, ratio: -1, color: '#ffdf00', disable: false },
-        { label: '路灯报警', count: 4, ratio: -1, color: '#179eff', disable: false }
-      ],
+      alarms: [],
       marker: {}, // 点标记
       markers: [], // 点集合
       map: {} // 地图对象
     }
   },
   mounted() {
-    setTimeout(() => this.initMap(), 1000)
+    this.initData()
   },
   methods: {
-    // 初始化地图
+    initData() {
+      this.initMap()
+      this.getAlarms()
+      this.initMarkers()
+    },
     initMap() {
       // 创建地图
       this.map = new AMap.Map('container', {
@@ -70,39 +68,105 @@ export default {
         // showLabel: true, // 显示地图文字标记
       })
 
-      // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
-      this.map.plugin(['AMap.ToolBar'], () => {
-        this.map.addControl(
-          new AMap.ToolBar({
-            liteStyle: true, // 简易缩放模式，默认为 false
-            position: 'RT'
-          })
-        )
-      })
+      this.map.on('complete', () => {
+        // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+        this.map.plugin(['AMap.ToolBar'], () => {
+          this.map.addControl(
+            new AMap.ToolBar({
+              liteStyle: true, // 简易缩放模式，默认为 false
+              position: 'RT'
+            })
+          )
+        })
 
-      this.map.on('zoomchange', () => {
-        console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
-      })
-
-      _.forEach(this.alarms, (item, index) => {
-        const marker = this.loadMarker({ iconStyle: item.color })
-        this.markers.splice(index, 1, marker)
-        this.map.add(marker)
+        this.map.on('zoomchange', () => {
+          console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
+        })
       })
     },
-    loadMarker({ iconStyle = 'red' }) {
-      return _.map(
-        Array(4),
-        (value, index) =>
-          // TODO 报警事件Marker
-          new AMap.Marker({
-            position: new AMap.LngLat(...gps(114.091058, 32.148624, 10000)), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            content: `<div style="border:1px solid ${iconStyle};width:20px;height:20px;border-radius: 50%;text-align: center;">${index +
-              1}</div>`, // 自定义点标记覆盖物内容
-            offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
-            anchor: 'bottom-center' // 设置锚点方位
-          })
+    getAlarms() {
+      // TODO 报警事件数据 step-1 定义数据格式
+      this.alarms.splice(
+        0,
+        this.alarms.length,
+        ...[
+          // {
+          //   label: '城管报警', // 事件名
+          //   count: 4, // 事件数
+          //   ratio: 1, // 时间同比变化（>0:上涨，<0:下降）
+          //   color: '#ff0000', // 事件颜色
+          //   disable: false, // 禁用激活
+          //   list: [ // 地图标记点
+          //     {
+          //       lng: 114.091058, // 经度
+          //       lat: 32.148624, // 纬度
+          //       source: '高点监测', // 来源
+          //       time: '2020-09-07 15:53:12', // 时间
+          //       position: '天府新区胜利东路456号', // 地点
+          //
+          //       // 城管、国土
+          //       camera: 'CCVT123', // 摄像机
+          //       angle: 50, // 方位角
+          //       state: '确认中', // 状态
+          //
+          //       // 空气
+          //       空气质量级别，AQI，PM2.5，PM10
+          //
+          //       // 灯联网的
+          //       集中器，灯编号，当前状态
+          //     }
+          //   ]
+          // },
+          /* eslint-disable prettier/prettier*/
+          { key:'site1', label: '城管报警', count: 0, ratio: 0, color: '#ff0000', disable: false, list: [] },
+          { key:'site2', label: '国土资源报警', count: 0, ratio: 0, color: '#f27022', disable: false, list: [] },
+          { key:'site3', label: '空气污染报警', count: 0, ratio: 0, color: '#ffdf00', disable: false, list: [] },
+          { key:'site4', label: '路灯报警', count: 0, ratio: 0, color: '#179eff', disable: false, list: [] }
+          /* eslint-enable prettier/prettier*/
+        ]
       )
+
+      // TODO 报警事件数据 step-2 生成数据
+      this.alarms.splice(
+        0,
+        this.alarms.length,
+        ..._.map(this.alarms, alarm => {
+          alarm.count = _.random(0, 10)
+          alarm.ratio = _.random(-1, 1)
+          alarm.list = _.map(Array(alarm.count), () => {
+            const { lng, lat } = gps(114.091058, 32.148624, 10000)
+            return {
+              source: '高点监测',
+              time: '2020-09-07 15:53:12',
+              position: '天府新区胜利东路456号',
+              camera: 'CCVT123',
+              angle: _.random(0, 360),
+              state: '确认中',
+              lng,
+              lat
+            }
+          })
+          return alarm
+        })
+      )
+    },
+    initMarkers() {
+      // TODO 报警事件Marker
+      _.forEach(this.alarms, (alarm, index) => {
+        console.log(`[LOG]: initMarkers -> alarm, index`, alarm, index)
+        const markers = _.map(
+          alarm.list,
+          item =>
+            new AMap.Marker({
+              position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+              content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
+              offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
+              anchor: 'bottom-center' // 设置锚点方位
+            })
+        )
+        this.markers.splice(index, 1, markers)
+        this.map.add(markers)
+      })
     },
     onAlarmClick(alarm, index) {
       const disableAlarms = _.filter(this.alarms, 'disable')

@@ -195,11 +195,11 @@ export function ip() {
 
 // #region 指定范围内随机经纬度坐标
 /** 指定范围内随机经纬度坐标
- * base_log：经度基准点，
+ * base_lng：经度基准点，
  * base_lat：维度基准点，
  * radius：距离基准点的半径
  */
-export function gps(base_log, base_lat, radius) {
+export function gps(base_lng, base_lat, radius) {
   let radius_in_degrees = radius / 111300
   let u = Math.random(0, 1)
   let v = Math.random(0, 1)
@@ -207,10 +207,10 @@ export function gps(base_log, base_lat, radius) {
   let t = 2 * Math.PI * v
   let x = w * Math.cos(t)
   let y = w * Math.sin(t)
-  let longitude = y + base_log
+  let longitude = y + base_lng
   let latitude = x + base_lat
-  let loga = roundFun(longitude, 6)
-  let lata = roundFun(latitude, 6)
-  return [loga, lata]
+  let lng = roundFun(longitude, 6)
+  let lat = roundFun(latitude, 6)
+  return { lng, lat }
 }
 // #endregion
