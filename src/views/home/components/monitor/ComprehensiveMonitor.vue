@@ -1,40 +1,45 @@
 <template>
   <div class="comprehensive-monitor">
-    <div id="container" class="map"></div>
-    <div class="footer">
-      <h1 class="footer__title">报警事件</h1>
-      <ul class="row alarm">
-        <li
-          class="colunm center-x alarm__item"
-          v-for="(alarm, index) in alarms"
-          :key="index"
-          @click="onAlarmClick(alarm, index)"
-        >
-          <div
-            class="alarm__data"
-            :style="{
-              color: alarm.disable ? '' : alarm.color,
-              filter: alarm.disable ? 'grayscale(100%)' : ''
-            }"
+    <div class="map">
+      <div id="container" class="map-container"></div>
+      <div class="footer">
+        <h1 class="footer__title">报警事件</h1>
+        <ul class="row alarm">
+          <li
+            class="colunm center-x alarm__item"
+            v-for="(alarm, index) in alarms"
+            :key="index"
+            @click="onAlarmClick(alarm, index)"
           >
-            <span
-              class="row alarm__value"
-              :class="{ up: alarm.ratio > 0, down: alarm.ratio < 0 }"
-              >{{ alarm.count }}</span
+            <div
+              class="alarm__data"
+              :style="{
+                color: alarm.disable ? '' : alarm.color,
+                filter: alarm.disable ? 'grayscale(100%)' : ''
+              }"
             >
-          </div>
-          <p class="alarm__label">{{ alarm.label }}</p>
-        </li>
-      </ul>
+              <span
+                class="row alarm__value"
+                :class="{ up: alarm.ratio > 0, down: alarm.ratio < 0 }"
+                >{{ alarm.count }}</span
+              >
+            </div>
+            <p class="alarm__label">{{ alarm.label }}</p>
+          </li>
+        </ul>
+      </div>
     </div>
+    <ComprehensiveMonitorDetail v-model="markerDetail"></ComprehensiveMonitorDetail>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
 import { gps } from '../../../../util/random'
+import ComprehensiveMonitorDetail from './ComprehensiveMonitorDetail.vue'
 
 export default {
+  components: { ComprehensiveMonitorDetail },
   data() {
     return {
       alarms: [],
@@ -310,9 +315,11 @@ export default {
 
 <style lang="scss" scoped>
 .comprehensive-monitor {
-  position: relative;
-
   .map {
+    position: relative;
+  }
+
+  .map-container {
     width: 1244px;
     height: 676px;
     background-color: #0a1944;
