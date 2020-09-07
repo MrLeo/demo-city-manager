@@ -32,7 +32,8 @@ export default {
       actions: [
         { title: '已处理', value: 75, color: '#0EA7FD' },
         { title: '待处理', value: 19, color: '#FF710C' },
-        { title: '不受理', value: 3, color: '#0EA7FD' }
+        { title: '不受理', value: 3, color: '#0EA7FD' },
+        { title: '已完成', value: 10, color: '#0EA7FD' }
       ]
     }
   }

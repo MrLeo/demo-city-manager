@@ -28,7 +28,8 @@ export default {
         return [
           { title: '已处理', value: 0, color: '#0EA7FD' },
           { title: '待处理', value: 0, color: '#FF710C' },
-          { title: '不受理', value: 0, color: '#0EA7FD' }
+          { title: '不受理', value: 0, color: '#0EA7FD' },
+          { title: '已完成', value: 0, color: '#0EA7FD' }
         ]
       }
     }
