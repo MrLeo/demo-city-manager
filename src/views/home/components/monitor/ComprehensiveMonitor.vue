@@ -34,12 +34,37 @@
 import _ from 'lodash'
 import { gps } from '../../../../util/random'
 
+const colors = [
+  '#3366cc',
+  '#dc3912',
+  '#ff9900',
+  '#109618',
+  '#990099',
+  '#0099c6',
+  '#dd4477',
+  '#66aa00',
+  '#b82e2e',
+  '#316395',
+  '#994499',
+  '#22aa99',
+  '#aaaa11',
+  '#6633cc',
+  '#e67300',
+  '#8b0707',
+  '#651067',
+  '#329262',
+  '#5574a6',
+  '#3b3eac'
+]
+
 export default {
   data() {
     return {
       alarms: [],
       marker: {}, // 点标记
       markers: [], // 点集合
+      districtExplorer: null, // 行政区
+      zoom: 12, // TODO 初始缩放级别
       map: {} // 地图对象
     }
   },
@@ -48,102 +73,13 @@ export default {
   },
   methods: {
     initData() {
+      this.getAlarms()
       this.initMap()
       this.geoDistrictExplorer()
-      this.getAlarms()
       this.initMarkers()
     },
-    initMap() {
-      // 创建地图
-      this.map = new AMap.Map('container', {
-        // MARK 自定义地图样式 https://lbs.amap.com/dev/mapstyle/index
-        mapStyle: 'amap://styles/darkblue',
-        features: ['bg', 'road'],
-        resizeEnable: true, // 是否监控地图容器尺寸变化，默认值为false
-        expandZoomRange: false, // 是否支持可以扩展最大缩放级别,和zooms属性配合使用设置为true的时候，zooms的最大级别在PC上可以扩大到20级，移动端还是高清19/非高清20
-        center: [114.091058, 32.148624], // TODO 地图中心位置
-        zooms: [4, 16], // 缩放范围
-        zoom: 12, // TODO 初始缩放级别
-        cursor: 'pointer',
-        defaultCursor: 'pointer' // 变成小手 地图默认鼠标样式。参数defaultCursor应符合CSS的cursor属性规范
-        // showLabel: true, // 显示地图文字标记
-      })
 
-      this.map.on('complete', () => {
-        // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
-        this.map.plugin(['AMap.ToolBar'], () => {
-          this.map.addControl(
-            new AMap.ToolBar({
-              liteStyle: true, // 简易缩放模式，默认为 false
-              position: 'RT'
-            })
-          )
-        })
-
-        this.map.on('zoomchange', () => {
-          console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
-        })
-      })
-    },
-    geoDistrictExplorer() {
-      const renderAreaNode = (districtExplorer, areaNode) => {
-        //清除已有的绘制内容
-        districtExplorer.clearFeaturePolygons()
-
-        //just some colors
-        var colors = [
-          '#3366cc',
-          '#dc3912',
-          '#ff9900',
-          '#109618',
-          '#990099',
-          '#0099c6',
-          '#dd4477',
-          '#66aa00'
-        ]
-
-        //绘制子级区划
-        districtExplorer.renderSubFeatures(areaNode, (feature, i) => {
-          var fillColor = colors[i % colors.length]
-          var strokeColor = colors[colors.length - 1 - (i % colors.length)]
-
-          return {
-            cursor: 'default',
-            bubble: true,
-            strokeColor: strokeColor, //线颜色
-            strokeOpacity: 1, //线透明度
-            strokeWeight: 1, //线宽
-            fillColor: fillColor, //填充色
-            fillOpacity: 0.35 //填充透明度
-          }
-        })
-
-        //绘制父级区划，仅用黑色描边
-        districtExplorer.renderParentFeature(areaNode, {
-          cursor: 'default',
-          bubble: true,
-          strokeColor: 'black', //线颜色
-          fillColor: null,
-          strokeWeight: 3 //线宽
-        })
-
-        //更新地图视野以适合区划面
-        this.map.setFitView(districtExplorer.getAllFeaturePolygons())
-      }
-
-      AMapUI.loadUI(['geo/DistrictExplorer'], DistrictExplorer => {
-        const districtExplorer = new DistrictExplorer({
-          eventSupport: true, //打开事件支持
-          map: this.map // 关联到地图
-        })
-        const adcode = 411500 //全国的区划编码
-        districtExplorer.loadAreaNode(adcode, function(error, areaNode) {
-          console.error(error)
-          if (error) return
-          renderAreaNode(districtExplorer, areaNode) //绘制载入的区划节点
-        })
-      })
-    },
+    /** 初始化数据 */
     getAlarms() {
       // TODO 报警事件数据 step-1 定义数据格式
       this.alarms.splice(
@@ -194,7 +130,7 @@ export default {
           alarm.count = _.random(0, 10)
           alarm.ratio = _.random(-1, 1)
           alarm.list = _.map(Array(alarm.count), () => {
-            const { lng, lat } = gps(114.091058, 32.148624, 10000)
+            const { lng, lat } = gps(115.221717, 32.0189, 40000)
             return {
               source: '高点监测',
               time: '2020-09-07 15:53:12',
@@ -210,6 +146,142 @@ export default {
         })
       )
     },
+
+    /** 初始化地图 */
+    initMap() {
+      // 创建地图
+      this.map = new AMap.Map('container', {
+        // MARK 自定义地图样式 https://lbs.amap.com/dev/mapstyle/index
+        mapStyle: 'amap://styles/darkblue',
+        features: ['bg', 'road'],
+        resizeEnable: true, // 是否监控地图容器尺寸变化，默认值为false
+        expandZoomRange: false, // 是否支持可以扩展最大缩放级别,和zooms属性配合使用设置为true的时候，zooms的最大级别在PC上可以扩大到20级，移动端还是高清19/非高清20
+        center: [114.091058, 32.148624], // TODO 地图中心位置
+        zooms: [4, 16], // 缩放范围
+        zoom: this.zoom,
+        cursor: 'pointer',
+        defaultCursor: 'pointer' // 变成小手 地图默认鼠标样式。参数defaultCursor应符合CSS的cursor属性规范
+        // showLabel: true, // 显示地图文字标记
+      })
+
+      this.map.on('complete', () => {
+        // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+        this.map.plugin(['AMap.ToolBar'], () => {
+          this.map.addControl(
+            new AMap.ToolBar({
+              liteStyle: true, // 简易缩放模式，默认为 false
+              position: 'RT'
+            })
+          )
+        })
+
+        this.map.on('zoomchange', () => {
+          console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
+          const zoom = this.map.getZoom()
+          this.zoom = zoom
+        })
+      })
+    },
+
+    /** 行政区
+     * https://lbs.amap.com/api/amap-ui/demos/amap-ui-districtexplorer/index
+     */
+    geoDistrictExplorer() {
+      AMapUI.loadUI(['geo/DistrictExplorer'], DistrictExplorer => {
+        const districtExplorer = (this.districtExplorer = new DistrictExplorer({
+          eventSupport: true, //打开事件支持
+          map: this.map
+        }))
+
+        let currentAreaNode = null //当前聚焦的区域
+
+        //绘制某个区域的边界
+        const renderAreaPolygons = areaNode => {
+          this.map.setBounds(areaNode.getBounds(), null, null, true) //更新地图视野
+          districtExplorer.clearFeaturePolygons() //清除已有的绘制内容
+          //绘制子区域
+          districtExplorer.renderSubFeatures(areaNode, (feature, i) => {
+            return {
+              cursor: 'default',
+              bubble: true,
+              strokeColor: colors[colors.length - 1 - (i % colors.length)], //线颜色
+              strokeOpacity: 1, //线透明度
+              strokeWeight: 1, //线宽
+              fillColor: colors[i % colors.length], //填充色
+              fillOpacity: 0.35 //填充透明度
+            }
+          })
+
+          //绘制父区域
+          districtExplorer.renderParentFeature(areaNode, {
+            cursor: 'default',
+            bubble: true,
+            strokeColor: 'black', //线颜色
+            strokeOpacity: 1, //线透明度
+            strokeWeight: 1, //线宽
+            fillColor: areaNode.getSubFeatures().length ? null : colors[0], //填充色
+            fillOpacity: 0.35 //填充透明度
+          })
+        }
+
+        //切换区域
+        const switch2AreaNode = adcode => {
+          if (currentAreaNode && '' + currentAreaNode.getAdcode() === '' + adcode) return
+          districtExplorer.loadAreaNode(adcode, (error, areaNode) => {
+            console.log(`[LOG]: switch2AreaNode -> adcode`, adcode)
+            console.log(`[LOG]: switch2AreaNode -> error, areaNode`, error, areaNode)
+            if (error) return
+            currentAreaNode = window.currentAreaNode = areaNode
+            districtExplorer.setAreaNodesForLocating([currentAreaNode]) //设置当前使用的定位用节点
+            districtExplorer.setHoverFeature(null)
+            renderAreaPolygons(areaNode)
+          })
+        }
+
+        //监听feature的hover事件
+        districtExplorer.on('featureMouseout featureMouseover', (e, feature) => {
+          const props = feature.properties
+          const polys = districtExplorer.findFeaturePolygonsByAdcode(props.adcode)
+          _.forEach(polys, poly =>
+            poly.setOptions({ fillOpacity: e.type === 'featureMouseover' ? 0.5 : 0.2 })
+          )
+        })
+
+        // //监听鼠标在feature上滑动
+        // districtExplorer.on('featureMousemove', (e, feature) => {
+        //   console.log(`[LOG]: geoDistrictExplorer -> e, feature`, e, feature)
+        // })
+
+        //feature被点击
+        districtExplorer.on('featureClick', (e, feature) => {
+          var props = feature.properties
+          //如果存在子节点
+          // if (props.childrenNum > 0) {
+          //切换聚焦区域
+          switch2AreaNode(props.adcode)
+          // }
+        })
+
+        //外部区域被点击
+        districtExplorer.on('outsideClick', function(e) {
+          districtExplorer.locatePosition(
+            e.originalEvent.lnglat,
+            function(error, routeFeatures) {
+              if (routeFeatures && routeFeatures.length > 1) {
+                switch2AreaNode(routeFeatures[1].properties.adcode) //切换到省级区域
+              } else {
+                switch2AreaNode(100000) //切换到全国
+              }
+            },
+            { levelLimit: 2 }
+          )
+        })
+
+        switch2AreaNode(411500)
+      })
+    },
+
+    /** 初始化Marker */
     initMarkers() {
       // TODO 报警事件Marker
       _.forEach(this.alarms, (alarm, index) => {
@@ -228,6 +300,8 @@ export default {
         this.map.add(markers)
       })
     },
+
+    /** 点击页脚报警事件 */
     onAlarmClick(alarm, index) {
       const disableAlarms = _.filter(this.alarms, 'disable')
 
