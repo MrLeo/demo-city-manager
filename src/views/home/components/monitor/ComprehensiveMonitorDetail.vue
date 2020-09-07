@@ -45,7 +45,7 @@
         </li>
         <li class="row" v-if="value.state">
           <div class="label">状态</div>
-          <div class="val">{{ value.state }}</div>
+          <div class="val state">{{ value.state }}</div>
         </li>
         <li class="row" v-if="value.qualityLevel">
           <div class="label">空气质量级别</div>
@@ -73,7 +73,7 @@
         </li>
         <li class="row" v-if="value.lampState">
           <div class="label">当前状态</div>
-          <div class="val">{{ value.lampState }}</div>
+          <div class="val state">{{ value.lampState }}</div>
         </li>
       </ul>
     </div>
