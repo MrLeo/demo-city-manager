@@ -34,29 +34,6 @@
 import _ from 'lodash'
 import { gps } from '../../../../util/random'
 
-const colors = [
-  '#3366cc',
-  '#dc3912',
-  '#ff9900',
-  '#109618',
-  '#990099',
-  '#0099c6',
-  '#dd4477',
-  '#66aa00',
-  '#b82e2e',
-  '#316395',
-  '#994499',
-  '#22aa99',
-  '#aaaa11',
-  '#6633cc',
-  '#e67300',
-  '#8b0707',
-  '#651067',
-  '#329262',
-  '#5574a6',
-  '#3b3eac'
-]
-
 export default {
   data() {
     return {
@@ -200,27 +177,26 @@ export default {
           this.map.setBounds(areaNode.getBounds(), null, null, true) //更新地图视野
           districtExplorer.clearFeaturePolygons() //清除已有的绘制内容
           //绘制子区域
-          districtExplorer.renderSubFeatures(areaNode, (feature, i) => {
+          districtExplorer.renderSubFeatures(areaNode, () => {
             return {
               cursor: 'default',
               bubble: true,
-              strokeColor: colors[colors.length - 1 - (i % colors.length)], //线颜色
+              strokeColor: '#00AFFF', //线颜色
               strokeOpacity: 1, //线透明度
               strokeWeight: 1, //线宽
-              fillColor: colors[i % colors.length], //填充色
-              fillOpacity: 0.35 //填充透明度
+              fillColor: '#00AFFF', //填充色
+              fillOpacity: 0 //填充透明度
             }
           })
-
           //绘制父区域
           districtExplorer.renderParentFeature(areaNode, {
             cursor: 'default',
             bubble: true,
-            strokeColor: 'black', //线颜色
+            strokeColor: '#00AFFF', //线颜色
             strokeOpacity: 1, //线透明度
             strokeWeight: 1, //线宽
-            fillColor: areaNode.getSubFeatures().length ? null : colors[0], //填充色
-            fillOpacity: 0.35 //填充透明度
+            fillColor: '#00AFFF', //填充色
+            fillOpacity: 0 //填充透明度
           })
         }
 
@@ -243,7 +219,7 @@ export default {
           const props = feature.properties
           const polys = districtExplorer.findFeaturePolygonsByAdcode(props.adcode)
           _.forEach(polys, poly =>
-            poly.setOptions({ fillOpacity: e.type === 'featureMouseover' ? 0.5 : 0.2 })
+            poly.setOptions({ fillOpacity: e.type === 'featureMouseover' ? 0.2 : 0 })
           )
         })
 
