@@ -116,6 +116,9 @@ export default {
 
       this.map.add(this.markers[index])
       alarm.disable = false
+
+      // 传入覆盖物数组，仅包括polyline和marker1的情况
+      // this.map.setFitView(this.markers[index]);
     }
   }
 }
