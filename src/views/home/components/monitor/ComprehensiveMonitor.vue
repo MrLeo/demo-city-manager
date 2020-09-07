@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       alarms: [],
-      marker: {}, // 点标记
+      markerDetail: null,
       markers: [], // 点集合
       districtExplorer: null, // 行政区
       zoom: 12, // TODO 初始缩放级别
@@ -153,7 +153,6 @@ export default {
         })
 
         this.map.on('zoomchange', () => {
-          console.log(`[LOG]: initMap -> 当前地图级别`, this.map.getZoom())
           const zoom = this.map.getZoom()
           this.zoom = zoom
         })
@@ -204,8 +203,6 @@ export default {
         const switch2AreaNode = adcode => {
           if (currentAreaNode && '' + currentAreaNode.getAdcode() === '' + adcode) return
           districtExplorer.loadAreaNode(adcode, (error, areaNode) => {
-            console.log(`[LOG]: switch2AreaNode -> adcode`, adcode)
-            console.log(`[LOG]: switch2AreaNode -> error, areaNode`, error, areaNode)
             if (error) return
             currentAreaNode = window.currentAreaNode = areaNode
             districtExplorer.setAreaNodesForLocating([currentAreaNode]) //设置当前使用的定位用节点
@@ -259,19 +256,23 @@ export default {
 
     /** 初始化Marker */
     initMarkers() {
+      const _this = this
+
       // TODO 报警事件Marker
       _.forEach(this.alarms, (alarm, index) => {
-        console.log(`[LOG]: initMarkers -> alarm, index`, alarm, index)
-        const markers = _.map(
-          alarm.list,
-          item =>
-            new AMap.Marker({
-              position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-              content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
-              offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
-              anchor: 'bottom-center' // 设置锚点方位
-            })
-        )
+        const markers = _.map(alarm.list, item => {
+          const marker = new AMap.Marker({
+            position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+            content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
+            offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
+            anchor: 'bottom-center', // 设置锚点方位
+            extData: item
+          })
+          marker.on('click', function() {
+            _this.markerDetail = this.getExtData()
+          })
+          return marker
+        })
         this.markers.splice(index, 1, markers)
         this.map.add(markers)
       })
