@@ -7,6 +7,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "http://59.110.8.170:8082/hezongkun/xy-demo.git"
+  },
   "dependencies": {
     "ant-design-vue": "^1.6.5",
     "chart.js": "^2.9.3",
