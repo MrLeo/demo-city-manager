@@ -33,7 +33,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: linear-gradient(90deg, #021541 0%, #0e2257 51%, #040d2b 100%);
+  background-image: linear-gradient(90deg, #071439 210px, #0e2257 51%, #040d2b 100%);
   color: #fff;
 
   &__main {
