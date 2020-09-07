@@ -279,13 +279,22 @@ export default {
 
     /** 点击页脚报警事件 */
     onAlarmClick(alarm, index) {
-      const disableAlarms = _.filter(this.alarms, 'disable')
+      const enableAlarms = _.filter(this.alarms, alarm => !alarm.disable)
+      const enableAlarmsSize = _.size(enableAlarms)
 
-      if (_.size(disableAlarms) === 0) {
+      if (enableAlarmsSize === this.alarms.length) {
         _.forEach(this.alarms, (alarm, i) => {
           alarm.disable = true
           this.map.remove(this.markers[i])
         })
+      }
+
+      if (enableAlarmsSize === 1 && alarm.key === enableAlarms[0]['key']) {
+        _.forEach(this.alarms, (alarm, i) => {
+          alarm.disable = false
+          this.map.add(this.markers[i])
+        })
+        this.map.remove(this.markers[index])
       }
 
       this.map.add(this.markers[index])
