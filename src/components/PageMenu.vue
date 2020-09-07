@@ -31,7 +31,7 @@ export default {
 
 <style lang="scss" scoped>
 .nav {
-  height: 100%;
+  min-height: 100%;
   width: 201px;
   display: flex;
   flex-direction: column;
