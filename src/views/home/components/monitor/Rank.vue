@@ -59,7 +59,7 @@ export default {
 
 <style lang="scss" scoped>
 .rank {
-  margin-left: 27px;
+  margin-left: 22px;
   &__block {
     padding: 35px 22px;
     width: 401px;
