@@ -7,6 +7,8 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.less'
 import IconFont from '@/components/IconFont/IconFont'
 
+import 'lib-flexible'
+
 Vue.config.productionTip = false
 
 Vue.use(Antd)
