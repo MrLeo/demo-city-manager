@@ -43,7 +43,6 @@ export default {
   data() {
     return {
       alarms: [],
-      infoWindow: {},
       markerDetail: null,
       markers: [], // 点集合
       districtExplorer: null, // 行政区
@@ -70,7 +69,7 @@ export default {
         this.alarms.length,
         ...[
           // {
-          //   label: '城管报警', // 事件名
+          //   label: '城管报警', // 事件类型
           //   count: 4, // 事件数
           //   ratio: 1, // 事件同比变化（>0:上涨，<0:下降）
           //   color: '#ff0000', // 事件颜色
@@ -80,6 +79,8 @@ export default {
           //     {
           //       lng: 114.091058, // 经度
           //       lat: 32.148624, // 纬度
+          //       name: '发生疑似森林火情', // 事件名
+          //       level: '高级', // 事件等级
           //       source: '高点监测', // 来源
           //       time: '2020-09-07 15:53:12', // 时间
           //       position: '天府新区胜利东路456号', // 地点
@@ -146,6 +147,8 @@ export default {
               source: '高点监测',
               time: '2020-09-07 15:53:12',
               position: '天府新区胜利东路456号',
+              name: '发生疑似森林火情',
+              level: '高级', // 事件等级
 
               video: {
                 cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png',
@@ -344,21 +347,20 @@ export default {
             _this.markerDetail = this.getExtData()
           })
           marker.on('mouseover', function() {
-            this.infoWindow = { ...alarm, marker: { ...item } }
             const infoWindow = new AMap.InfoWindow({
               isCustom: true, //使用自定义窗体
               content: `
 <div class="info-window" style="background-color: rgb(77,159,224,0.6);">
   <div class="info-window__head row center-x" style="background-color: ${alarm.color};color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
-  <h1 class="info-window__title row center-x" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">发生疑似森林火情 &nbsp;<span class="level" style="font-size:10px;background-color:#f00;">高级</span></h1>
+  <h1 class="info-window__title row center-x" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">${item.name} &nbsp;<span class="level" style="font-size:10px;background-color:#f00;">${item.level}</span></h1>
   <ul style="padding:5px;">
     <li class="row">
       <div class="label" style="width:30px;">时间</div>
-      <div class="value">2020-09-08 20:52:03</div>
+      <div class="value">${item.time}</div>
     </li>
     <li class="row">
       <div class="label" style="width:30px;">地点</div>
-      <div class="value">信阳是开发区清泰路</br>113123号</div>
+      <div class="value">${item.position}</div>
     </li>
   </ul>
   <div class="info-window__footer" style="display:flex;justify-content:flex-end;padding:5px;">
@@ -370,8 +372,7 @@ export default {
             infoWindow.open(_this.map, marker.getPosition())
           })
           marker.on('mouseout', function() {
-            // _this.map.clearInfoWindow()
-            // this.infoWindow = {}
+            _this.map.clearInfoWindow()
           })
           return marker
         })
