@@ -9,7 +9,11 @@
           >
           <p class="doughnut-chart__title">{{ action.title }}</p>
         </div>
-        <DoughnutChart :chart-data="action" :border-color="action.color"></DoughnutChart>
+        <DoughnutChart
+          class="v-doughnut-chart"
+          :chart-data="action"
+          :border-color="action.color"
+        ></DoughnutChart>
       </div>
     </div>
   </div>
@@ -92,5 +96,9 @@ export default {
 
     transform: translate(-50%, -50%);
   }
+}
+.v-doughnut-chart {
+  width: 120px;
+  height: 120px;
 }
 </style>

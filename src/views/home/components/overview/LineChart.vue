@@ -14,6 +14,7 @@
         >
       </div>
       <LineChart
+        class="v-line-chart"
         :chart-data="chartData"
         :border-color="borderColor"
         v-bind="$attrs"
@@ -92,5 +93,9 @@ export default {
       content: '↓';
     }
   }
+}
+.v-line-chart {
+  width: 223px;
+  height: 129px;
 }
 </style>

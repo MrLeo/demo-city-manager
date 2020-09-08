@@ -3,7 +3,10 @@
     <div class="rank__block">
       <h1 class="rank__title">报警类型</h1>
       <div class="row center-x" style="margin-top: 79px; justify-content: space-around;">
-        <AlarmDoughnutChart :chart-data="alarms"></AlarmDoughnutChart>
+        <AlarmDoughnutChart
+          class="v-alarm-doughnut-chart"
+          :chart-data="alarms"
+        ></AlarmDoughnutChart>
         <ul class="column tip">
           <li class="row center-x tip__item" v-for="alarm in alarms.percent" :key="alarm.label">
             <i class="tip__dot" :style="{ backgroundColor: alarm.color }"></i>
@@ -17,9 +20,14 @@
       <h1 class="rank__title">报警地点排行</h1>
       <ul class="toprank">
         <li class="toprank__item" v-for="rank in alarms.rank" :key="rank.label">
-          <div class="row center-x toprank__progress-bar">
+          <div class="row center-x toprank__progress">
             <span class="toprank__score">{{ rank.value }}</span>
-            <div class="toprank__progress" :style="{ width: `${rank.value * 10}px` }"></div>
+            <div class="toprank__progress-wrap">
+              <div
+                class="toprank__progress-bar"
+                :style="{ width: `${rank.value + (Math.random() * 1 + 50)}%` }"
+              ></div>
+            </div>
           </div>
           <p class="toprank__location">{{ rank.label }}</p>
         </li>
@@ -128,16 +136,24 @@ export default {
       letter-spacing: 0px;
       color: rgba(255, 255, 255, 0.6);
     }
-    &__progress-bar {
+    &__progress {
       width: 363px;
+      display: flex;
     }
 
-    &__progress {
+    &__progress-wrap {
+      flex: 1;
+    }
+    &__progress-bar {
       transition: width 4s ease-in-out;
       height: 8px;
       background-image: linear-gradient(90deg, #01fdf9 0%, #0ea7fd 100%);
       border-radius: 4px;
     }
   }
+}
+.v-alarm-doughnut-chart {
+  width: 154px;
+  height: 154px;
 }
 </style>

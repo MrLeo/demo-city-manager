@@ -30,7 +30,7 @@ export const LineChart = {
     styles: {
       type: Object,
       default() {
-        return { width: '223px', height: '129px' }
+        return { /* width: '223px', height: '129px', */ position: 'relative' }
       }
     },
     borderColor: {
@@ -130,7 +130,7 @@ export const DoughnutChart = {
     styles: {
       type: Object,
       default() {
-        return { width: '120px', height: '120px', position: 'relative' }
+        return { /* width: '120px', height: '120px', */ position: 'relative' }
       }
     },
     borderColor: {
@@ -211,7 +211,7 @@ export const AlarmDoughnutChart = {
     styles: {
       type: Object,
       default() {
-        return { width: '154px', height: '154px', position: 'relative' }
+        return { /* width: '154px', height: '154px', */ position: 'relative' }
       }
     },
     borderColor: {

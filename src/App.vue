@@ -49,4 +49,12 @@ export default {
     padding: 25px;
   }
 }
+
+// @media all and (-moz-min-device-pixel-ratio: 1.81) and (-moz-max-device-pixel-ratio: 2.1),
+//   (-webkit-min-device-pixel-ratio: 1.81) and (-webkit-max-device-pixel-ratio: 2.1),
+//   (min-resolution: 1.81dppx) and (max-resolution: 2.1dppx) {
+//   :root {
+//     color: #fff;
+//   }
+// }
 </style>

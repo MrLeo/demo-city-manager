@@ -406,7 +406,7 @@ export default {
 
   .map-container {
     width: 1244px;
-    height: 676px;
+    height: 720px;
     background-color: #0a1944;
 
     >>> .amap-logo {
