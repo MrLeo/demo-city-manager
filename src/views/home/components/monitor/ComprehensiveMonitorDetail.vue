@@ -91,49 +91,6 @@ export default {
     value: {
       type: Object,
       default() {
-        // {
-        //   lng: 114.091058, // 经度
-        //   lat: 32.148624, // 纬度
-        //   source: '高点监测', // 来源
-        //   time: '2020-09-07 15:53:12', // 时间
-        //   position: '天府新区胜利东路456号', // 地点
-        //   // 视频信息
-        //   video: {
-        //     cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png', // 视频封面
-        //     // 视频源
-        //     source: [
-        //       {
-        //         src: 'https://media.vued.vanthink.cn/sparkle_your_name_am360p.mp4',
-        //         resolution: 360
-        //       },
-        //       {
-        //         src: 'https://media.vued.vanthink.cn/sparkle_your_name_am720p.mp4',
-        //         resolution: 720
-        //       },
-        //       {
-        //         src:
-        //           'https://media.vued.vanthink.cn/y2mate.com%20-%20sparkle_your_name_amv_K_7To_y9IAM_1080p.mp4',
-        //         resolution: 1080
-        //       }
-        //     ]
-        //   },
-
-        //   // 城管、国土
-        //   camera: 'CCVT123', // 摄像机
-        //   angle: 50, // 方位角
-        //   state: '确认中', // 状态
-
-        //   // 空气
-        //   qualityLevel: 1, // 空气质量级别
-        //   AQI: 2,
-        //   PM2: 3,
-        //   PM10: 4,
-
-        //   // 灯联网的
-        //   concentrator: 'AWK', // 集中器
-        //   lampNumber: 'A0001', // 灯编号
-        //   lampState: '正常' //当前状态
-        // }
         return null
       }
     }

@@ -335,6 +335,31 @@ export default {
           marker.on('click', function() {
             _this.markerDetail = this.getExtData()
           })
+          marker.on('mouseover', function() {
+            const infoWindow = new AMap.InfoWindow({
+              isCustom: true, //使用自定义窗体
+              content: `
+<div class="info-window" style="background-color: rgb(77,159,224,0.6);">
+  <div className="info-window__head" style="background-color: ${alarm.color};color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
+  <h1 className="info-window__title" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">发生疑似森林火情 <span class="level" style="font-size:16px;padding:2px;background-color:#f00;">高级</span></h1>
+  <ul style="padding:5px;">
+    <li class="row">
+      <div class="label" style="width:30px;">时间</div>
+      <div class="value">2020-09-08 20:52:03</div>
+    </li>
+    <li class="row">
+      <div class="label" style="width:30px;">地点</div>
+      <div class="value">信阳是开发区清泰路</br>113123号</div>
+    </li>
+  </ul>
+</div>`,
+              offset: new AMap.Pixel(16, -45)
+            })
+            infoWindow.open(_this.map, marker.getPosition())
+          })
+          marker.on('mouseout', function() {
+            _this.map.clearInfoWindow()
+          })
           return marker
         })
         this.markers.splice(index, 1, markers)
