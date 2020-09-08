@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       alarms: [],
+      infoWindow: {},
       markerDetail: null,
       markers: [], // 点集合
       districtExplorer: null, // 行政区
@@ -323,9 +324,15 @@ export default {
     initMarkers() {
       const _this = this
 
+      window.onMarkerClick = (key, index) => {
+        const alarm = _.find(this.alarms, alarm => alarm.key === key)
+        const marker = alarm.list[index] || {}
+        this.markerDetail = marker
+      }
+
       // TODO 报警事件Marker
       _.forEach(this.alarms, (alarm, index) => {
-        const markers = _.map(alarm.list, item => {
+        const markers = _.map(alarm.list, (item, index) => {
           const marker = new AMap.Marker({
             position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
             content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
@@ -337,12 +344,13 @@ export default {
             _this.markerDetail = this.getExtData()
           })
           marker.on('mouseover', function() {
+            this.infoWindow = { ...alarm, marker: { ...item } }
             const infoWindow = new AMap.InfoWindow({
               isCustom: true, //使用自定义窗体
               content: `
 <div class="info-window" style="background-color: rgb(77,159,224,0.6);">
-  <div className="info-window__head" style="background-color: ${alarm.color};color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
-  <h1 className="info-window__title" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">发生疑似森林火情 <span class="level" style="font-size:16px;padding:2px;background-color:#f00;">高级</span></h1>
+  <div class="info-window__head row center-x" style="background-color: ${alarm.color};color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
+  <h1 class="info-window__title row center-x" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">发生疑似森林火情 &nbsp;<span class="level" style="font-size:10px;background-color:#f00;">高级</span></h1>
   <ul style="padding:5px;">
     <li class="row">
       <div class="label" style="width:30px;">时间</div>
@@ -353,13 +361,17 @@ export default {
       <div class="value">信阳是开发区清泰路</br>113123号</div>
     </li>
   </ul>
+  <div class="info-window__footer" style="display:flex;justify-content:flex-end;padding:5px;">
+    <a href="javascript:window.onMarkerClick('${alarm.key}',${index})" class="footer-btn" style="background-color:${alarm.color};color:#FFF;width:100px;padding:5px;text-align:center;">实时监控</a>
+  </div>
 </div>`,
-              offset: new AMap.Pixel(16, -45)
+              offset: new AMap.Pixel(0, -10)
             })
             infoWindow.open(_this.map, marker.getPosition())
           })
           marker.on('mouseout', function() {
-            _this.map.clearInfoWindow()
+            // _this.map.clearInfoWindow()
+            // this.infoWindow = {}
           })
           return marker
         })
