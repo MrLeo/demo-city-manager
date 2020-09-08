@@ -46,7 +46,7 @@ export default {
       markerDetail: null,
       markers: [], // 点集合
       districtExplorer: null, // 行政区
-      zoom: 12, // TODO 初始缩放级别
+      zoom: 9, // TODO 初始缩放级别
       map: {} // 地图对象
     }
   },
@@ -191,13 +191,13 @@ export default {
     /** 初始化地图 */
     initMap() {
       // 创建地图
-      this.map = new AMap.Map('container', {
+      this.map = window.map = new AMap.Map('container', {
         // MARK 自定义地图样式 https://lbs.amap.com/dev/mapstyle/index
         mapStyle: 'amap://styles/darkblue',
         features: ['bg', 'road'],
         resizeEnable: true, // 是否监控地图容器尺寸变化，默认值为false
         expandZoomRange: false, // 是否支持可以扩展最大缩放级别,和zooms属性配合使用设置为true的时候，zooms的最大级别在PC上可以扩大到20级，移动端还是高清19/非高清20
-        center: [114.091058, 32.148624], // TODO 地图中心位置
+        center: [114.879901, 31.971168], // TODO 地图中心位置
         zooms: [4, 16], // 缩放范围
         zoom: this.zoom,
         cursor: 'pointer',
@@ -238,7 +238,7 @@ export default {
 
         //绘制某个区域的边界
         const renderAreaPolygons = areaNode => {
-          this.map.setBounds(areaNode.getBounds(), null, null, true) //更新地图视野
+          // this.map.setBounds(areaNode.getBounds(), null, null, true) //更新地图视野
           districtExplorer.clearFeaturePolygons() //清除已有的绘制内容
           //绘制子区域
           districtExplorer.renderSubFeatures(areaNode, () => {
