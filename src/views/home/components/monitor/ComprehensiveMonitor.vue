@@ -218,6 +218,7 @@ export default {
 
         this.map.on('zoomchange', () => {
           const zoom = this.map.getZoom()
+          if (this.zoom > zoom) this.geoDistrictExplorer()
           this.zoom = zoom
         })
       })
