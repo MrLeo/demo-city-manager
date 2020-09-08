@@ -28,6 +28,7 @@ export default {
 .app {
   min-height: 100%;
   min-width: 1920px;
+  zoom: 0.78;
   display: flex;
   flex-direction: column;
   font-family: Avenir, Helvetica, Arial, sans-serif;
