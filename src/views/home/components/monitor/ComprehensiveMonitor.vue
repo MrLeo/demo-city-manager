@@ -133,6 +133,7 @@ export default {
       ])
     },
 
+    /** 获取『国土资源』『智慧城管』报警数据 */
     async getLandResources(index) {
       const markers = _.map(Array(_.random(0, 10)), () => {
         const { lng, lat } = gps(115.221717, 32.0189, 40000)
