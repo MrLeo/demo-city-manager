@@ -34,7 +34,11 @@
 </template>
 
 <script>
+/* eslint-disable max-len */
+/* eslint-disable prettier/prettier */
 import _ from 'lodash'
+import axios from 'axios'
+import moment from 'moment'
 import { gps } from '../../../../util/random'
 import ComprehensiveMonitorDetail from './ComprehensiveMonitorDetail.vue'
 
@@ -42,7 +46,65 @@ export default {
   components: { ComprehensiveMonitorDetail },
   data() {
     return {
-      alarms: [],
+      alarms: [
+        // TODO 报警事件数据 step-1 定义数据格式
+        // {
+        //   label: '城管报警', // 事件类型
+        //   count: 4, // 事件数
+        //   ratio: 1, // 事件同比变化（>0:上涨，<0:下降）
+        //   color: '#ff0000', // 事件颜色
+        //   disable: false, // 禁用激活
+        //   list: [
+        //     // 地图标记点
+        //     {
+        //       lng: 114.091058, // 经度
+        //       lat: 32.148624, // 纬度
+        //       name: '海营水库打起污染检测指数超标', // 事件名
+        //       level: '高级', // 事件等级
+        //       time: '2020-09-07 15:53:12', // 时间
+        //       position: '天府新区胜利东路456号', // 地点
+        //       cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png', // 左侧（视频封面 / 背景图）
+        //       videoSource: 'https://gbs.liveqing.com:10010/play.html?serial=34020000001110000064&code=37020100001320000003&aspect=fullscreen', // 视频地址
+        //       info:[
+        //           // 国土资源和智慧城管
+        //           {label: '来源', value: '高点监测'},
+        //           {label: '时间', value: '2020-09-10 21:42:00'},
+        //           {label: '地点', value: '天府新区胜利东路456号'},
+        //           {label: '摄像机', value: 'CCVT123'},
+        //           {label: '经度', value: 114.091058},
+        //           {label: '纬度', value: 32.148624},
+        //           {label: '方位角', value: '50度'},
+        //           {label: '状态', value: '确认中'},
+
+        //           // 灯联网
+        //           {label: '来源', value: '高点监测'},
+        //           {label: '时间', value: '2020-09-10 21:42:00'},
+        //           {label: '经度', value: 114.091058},
+        //           {label: '纬度', value: 32.148624},
+        //           {label: '集中器', value: '天烛峰路北变压器'},
+        //           {label: '灯编号', value: 2},
+        //           {label: '状态', value: '故障'},
+
+        //           // 空气质量
+        //           {label: '来源', value: '高点监测'},
+        //           {label: '时间', value: '2020-09-10 21:42:00'},
+        //           {label: '地点', value: '天府新区胜利东路456号'},
+        //           {label: '污染级别', value: '重度污染'},
+        //           {label: 'AQI', value: '255'},
+        //           {label: 'PM2.5', value: '280'},
+        //           {label: 'PM10', value: '130'},
+        //           {label: '状态', value: '确认中'}
+        //         ],
+        //     }
+        //   ]
+        // },
+        /* eslint-disable prettier/prettier*/
+        { key:'site1', label: '城管报警', count: 0, ratio: 0, color: '#ff0000', disable: false, list: [] },
+        { key:'site2', label: '国土资源报警', count: 0, ratio: 0, color: '#f27022', disable: false, list: [] },
+        { key:'site3', label: '空气污染报警', count: 0, ratio: 0, color: '#ffdf00', disable: false, list: [] },
+        { key:'site4', label: '路灯报警', count: 0, ratio: 0, color: '#179eff', disable: false, list: [] }
+        /* eslint-enable prettier/prettier*/
+      ],
       markerDetail: null,
       markers: [], // 点集合
       districtExplorer: null, // 行政区
@@ -54,142 +116,170 @@ export default {
     this.initData()
   },
   methods: {
-    initData() {
-      this.getAlarms()
+    async initData() {
+      await this.getAlarms()
       this.initMap()
       this.geoDistrictExplorer()
       this.initMarkers()
     },
 
     /** 初始化数据 */
-    getAlarms() {
-      // TODO 报警事件数据 step-1 定义数据格式
-      this.alarms.splice(
-        0,
-        this.alarms.length,
-        ...[
-          // {
-          //   label: '城管报警', // 事件类型
-          //   count: 4, // 事件数
-          //   ratio: 1, // 事件同比变化（>0:上涨，<0:下降）
-          //   color: '#ff0000', // 事件颜色
-          //   disable: false, // 禁用激活
-          //   list: [
-          //     // 地图标记点
-          //     {
-          //       lng: 114.091058, // 经度
-          //       lat: 32.148624, // 纬度
-          //       name: '发生疑似森林火情', // 事件名
-          //       level: '高级', // 事件等级
-          //       source: '高点监测', // 来源
-          //       time: '2020-09-07 15:53:12', // 时间
-          //       position: '天府新区胜利东路456号', // 地点
-          //       // 视频信息
-          //       video: {
-          //         cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png', // 视频封面
-          //         // 视频源
-          //         source: [
-          //           {
-          //             src: 'https://media.vued.vanthink.cn/sparkle_your_name_am360p.mp4',
-          //             resolution: 360
-          //           },
-          //           {
-          //             src: 'https://media.vued.vanthink.cn/sparkle_your_name_am720p.mp4',
-          //             resolution: 720
-          //           },
-          //           {
-          //             src:
-          //               'https://media.vued.vanthink.cn/y2mate.com%20-%20sparkle_your_name_amv_K_7To_y9IAM_1080p.mp4',
-          //             resolution: 1080
-          //           }
-          //         ]
-          //       },
-          //
-          //       // 城管、国土
-          //       camera: 'CCVT123', // 摄像机
-          //       angle: 50, // 方位角
-          //       state: '确认中', // 状态
-          //
-          //       // 空气
-          //       qualityLevel: 1, // 空气质量级别
-          //       AQI: 2,
-          //       PM2: 3,
-          //       PM10: 4,
-          //
-          //       // 灯联网的
-          //       concentrator: 'AWK', // 集中器
-          //       lampNumber: 'A0001', // 灯编号
-          //       lampState: '正常' //当前状态
-          //     }
-          //   ]
-          // },
-          /* eslint-disable prettier/prettier*/
-          { key:'site1', label: '城管报警', count: 0, ratio: 0, color: '#ff0000', disable: false, list: [] },
-          { key:'site2', label: '国土资源报警', count: 0, ratio: 0, color: '#f27022', disable: false, list: [] },
-          { key:'site3', label: '空气污染报警', count: 0, ratio: 0, color: '#ffdf00', disable: false, list: [] },
-          { key:'site4', label: '路灯报警', count: 0, ratio: 0, color: '#179eff', disable: false, list: [] }
-          /* eslint-enable prettier/prettier*/
-        ]
-      )
-
+    async getAlarms() {
       // TODO 报警事件数据 step-2 生成数据
-      this.alarms.splice(
-        0,
-        this.alarms.length,
-        ..._.map(this.alarms, alarm => {
-          alarm.count = _.random(0, 10)
-          alarm.ratio = _.random(-1, 1)
-          alarm.list = _.map(Array(alarm.count), () => {
-            const { lng, lat } = gps(115.221717, 32.0189, 40000)
-            const listItem = {
-              lng,
-              lat,
-              source: '高点监测',
-              time: '2020-09-07 15:53:12',
-              position: '天府新区胜利东路456号',
-              name: '发生疑似森林火情',
-              level: '高级', // 事件等级
+      return await Promise.all([
+        this.getLandResources(0),
+        this.getLandResources(1),
+        this.getLightPoleData(),
+        this.getAirPollution()
+      ])
+    },
 
-              video: {
-                cover: 'https://img1.wxzxzj.com/vpc-example-cover-your-name-c.png',
-                source: [
-                  {
-                    src: 'https://media.vued.vanthink.cn/sparkle_your_name_am360p.mp4',
-                    resolution: 360
-                  },
-                  {
-                    src: 'https://media.vued.vanthink.cn/sparkle_your_name_am720p.mp4',
-                    resolution: 720
-                  },
-                  {
-                    src:
-                      'https://media.vued.vanthink.cn/y2mate.com%20-%20sparkle_your_name_amv_K_7To_y9IAM_1080p.mp4',
-                    resolution: 1080
-                  }
-                ]
-              }
-            }
-            if (['site1', 'site2'].includes(alarm.key)) {
-              listItem.camera = 'CCVT123' // 摄像机
-              listItem.angle = _.random(0, 360) // 方位角
-              listItem.state = '确认中' // 状态
-            }
-            if (alarm.key === 'site3') {
-              listItem.qualityLevel = 1
-              listItem.AQI = 2
-              listItem.PM2 = 3
-              listItem.PM10 = 4
-            }
-            if (alarm.key === 'site4') {
-              listItem.concentrator = 'AWK'
-              listItem.lampNumber = 'A0001'
-              listItem.lampState = '正常'
-            }
-            return listItem
+    async getLandResources(index) {
+      const markers = _.map(Array(_.random(0, 10)), () => {
+        const { lng, lat } = gps(115.221717, 32.0189, 40000)
+        return {
+          lng, // 经度
+          lat, // 纬度
+          name: `高点监测`, // 事件名
+          level: '高级', // 事件等级
+          time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
+          position: '天府新区胜利东路456号', // 地点
+          cover: require('../../../../../public/cover.png'), // 左侧（视频封面 / 背景图）
+          /* eslint-disable prettier/prettier */
+          // videoSource: 'https://media.wxzxzj.com/the_garden_of_words_trailer_english__1080p.m3u8',
+          // videoSource: 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s-fmp4/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+          videoSource: 'https://gbs.liveqing.com:10010/sms/34020000002020000001/hls/34020000001110000064_37020100001320000003/34020000001110000064_37020100001320000003_live.m3u8?token=V_WKYhFgVuOPeokLEHKymHwAMvyvPXFnu1xGdHQctBH.oxNTk5NzU2Mjc3LCJwIjoiMzA4NjMyYTc4ZCIsInQiOjE1OTk3NTU5NzcsInUiOiIzMDg2MzJhNzhkIn0eyJlIj.GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJhb',
+          info: [
+            { label: '来源', value: '大气污染监测' },
+            { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
+            { label: '地点', value: '信阳市开发区海营水库' },
+            { label: '摄像机', value: 'CCVT123' },
+            { label: '经度', value: lng },
+            { label: '纬度', value: lat },
+            { label: '方位角', value: `${_.random(0, 360)}度` },
+            { label: '状态', value: '确认中' }
+          ]
+        }
+      })
+
+      const alarm = this.alarms[index]
+      alarm.count = markers.length
+      alarm.ratio = _.random(-1, 1)
+      alarm.list = markers
+
+      return Promise.resolve(markers)
+    },
+
+    /** 获取『灯联网』报警数据 */
+    async getLightPoleData() {
+      // eslint-disable-next-line prettier/prettier
+      const { data: { pole,transf } } = await axios.get('http://114.215.143.58:5502/api/Transfinfo.ashx?code=3801')
+
+      const markers = []
+      _.forEach(pole, poleItem => {
+        if (poleItem.pole_state === 5) {
+          const markerInfo = {
+            lng: poleItem.lng_baidu, // 经度
+            lat: poleItem.lat_baidu, // 纬度
+            name: `灯联网报警`, // 事件名
+            level: '故障', // 事件等级
+            time: poleItem.fault_dt || '', // 时间
+            point: poleItem.point || '', // 灯编号
+            position: '', // 地点
+            cover: require('../../../../../public/cover.png') // 左侧（视频封面 / 背景图）
+          }
+          markers.push({
+            ...markerInfo,
+            info: [
+              { label: '来源', value: markerInfo.name },
+              { label: '时间', value: markerInfo.time },
+              { label: '经度', value: markerInfo.lng || '' },
+              { label: '纬度', value: markerInfo.lat || '' },
+              { label: '集中器', value: transf.name || '' },
+              { label: '灯编号', value: markerInfo.point || '' },
+              { label: '状态', value: markerInfo.level }
+            ]
           })
-          return alarm
-        })
-      )
+        }
+      })
+
+      const alarm = this.alarms[3]
+      alarm.count = markers.length
+      alarm.ratio = _.random(-1, 1)
+      alarm.list = markers
+
+      return markers
+      // return _.filter(pole, poleItem => poleItem.pole_state === 5)
+    },
+
+    /** 获取『空气污染』报警数据 */
+    async getAirPollution() {
+      const markers = [
+        {
+          lng: '114.17315', // 经度
+          lat: '32.18745', // 纬度
+          name: `海营水库大气污染检测指数超标`, // 事件名
+          level: '确认中', // 事件等级
+          time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
+          position: '信阳市开发区海营水库', // 地点
+          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          info: [
+            { label: '来源', value: '大气污染监测' },
+            { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
+            { label: '地点', value: '信阳市开发区海营水库' },
+            { label: '污染级别', value: '严重污染' },
+            { label: 'AQI', value: '255' },
+            { label: 'PM2.5', value: '280' },
+            { label: 'PM10', value: '130' },
+            { label: '状态', value: '确认中' }
+          ]
+        },
+        {
+          lng: '114.16058', // 经度
+          lat: '332.13957', // 纬度
+          name: `城东办事处大气污染检测指数超标`, // 事件名
+          level: '中度污染', // 事件等级
+          time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
+          position: '信阳市开发区城东办事处', // 地点
+          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          info: [
+            { label: '来源', value: '大气污染监测' },
+            { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
+            { label: '地点', value: '信阳市开发区城东办事处' },
+            { label: '污染级别', value: '中度污染' },
+            { label: 'AQI', value: '177' },
+            { label: 'PM2.5', value: '168' },
+            { label: 'PM10', value: '190' },
+            { label: '状态', value: '中度污染' }
+          ]
+        },
+        {
+          lng: '114.17209', // 经度
+          lat: '32.13678', // 纬度
+          name: `新栗集团大气污染检测指数超标`, // 事件名
+          level: '轻度污染', // 事件等级
+          time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
+          position: '信阳市开发区新栗集团', // 地点
+          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          info: [
+            { label: '来源', value: '大气污染监测' },
+            { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
+            { label: '地点', value: '信阳市开发区新栗集团' },
+            { label: '污染级别', value: '严重污染' },
+            { label: 'AQI', value: '127' },
+            { label: 'PM2.5', value: '125' },
+            { label: 'PM10', value: '130' },
+            { label: '状态', value: '轻度污染' }
+          ]
+        }
+      ]
+
+      const alarm = this.alarms[2]
+      alarm.count = markers.length
+      alarm.ratio = _.random(-1, 1)
+      alarm.list = markers
+
+      return Promise.resolve(markers)
     },
 
     /** 初始化地图 */
@@ -335,7 +425,9 @@ export default {
 
       // TODO 报警事件Marker
       _.forEach(this.alarms, (alarm, index) => {
+        console.log(`[LOG]: initMarkers -> alarm`, alarm)
         const markers = _.map(alarm.list, (item, index) => {
+          console.log(`[LOG]: initMarkers -> item`, item)
           const marker = new AMap.Marker({
             position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
             content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
@@ -351,20 +443,31 @@ export default {
               isCustom: true, //使用自定义窗体
               content: `
 <div class="info-window" style="background-color: rgb(77,159,224,0.6);">
-  <div class="info-window__head row center-x" style="background-color: ${alarm.color};color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
-  <h1 class="info-window__title row center-x" style="color: #fff; font-size: 20px; font-weight: 900; margin: 5px;">${item.name} &nbsp;<span class="level" style="font-size:10px;background-color:#f00;">${item.level}</span></h1>
+  <div class="info-window__head row center-x" style="background-color: ${
+    alarm.color
+  };color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
+  <h1 class="info-window__title row center-x" style="flex-wrap: nowrap;color: #fff; font-size: 20px; font-weight: 900; margin: 5px; white-space: nowrap;">
+    <span class="info-window__title-txt">${item.name}</span>&nbsp;
+    <span class="level" style="white-space: nowrap;font-size:10px;background-color:#f00;">${
+      item.level
+    }</span>
+  </h1>
   <ul style="padding:5px;">
-    <li class="row">
+    <li class="row" style="${item.time ? '' : 'display:none'}">
       <div class="label" style="width:30px;">时间</div>
       <div class="value">${item.time}</div>
     </li>
-    <li class="row">
+    <li class="row" style="${item.position ? '' : 'display:none'}">
       <div class="label" style="width:30px;">地点</div>
       <div class="value">${item.position}</div>
     </li>
   </ul>
   <div class="info-window__footer" style="display:flex;justify-content:flex-end;padding:5px;">
-    <a href="javascript:window.onMarkerClick('${alarm.key}',${index})" class="footer-btn" style="background-color:${alarm.color};color:#FFF;width:100px;padding:5px;text-align:center;">实时监控</a>
+    <a href="javascript:window.onMarkerClick('${
+      alarm.key
+    }',${index})" class="footer-btn" style="background-color:${
+                alarm.color
+              };color:#FFF;width:100px;padding:5px;text-align:center;">实时监控</a>
   </div>
 </div>`,
               offset: new AMap.Pixel(0, -10)
@@ -372,7 +475,7 @@ export default {
             infoWindow.open(_this.map, marker.getPosition())
           })
           marker.on('mouseout', function() {
-            _this.map.clearInfoWindow()
+            // _this.map.clearInfoWindow()
           })
           return marker
         })
