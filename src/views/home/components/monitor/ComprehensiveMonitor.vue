@@ -35,7 +35,6 @@
 
 <script>
 /* eslint-disable max-len */
-/* eslint-disable prettier/prettier */
 import _ from 'lodash'
 import axios from 'axios'
 import moment from 'moment'
@@ -145,10 +144,10 @@ export default {
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '天府新区胜利东路456号', // 地点
           cover: require('../../../../../public/cover.png'), // 左侧（视频封面 / 背景图）
-          /* eslint-disable prettier/prettier */
           // videoSource: 'https://media.wxzxzj.com/the_garden_of_words_trailer_english__1080p.m3u8',
           // videoSource: 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s-fmp4/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-          videoSource: 'https://gbs.liveqing.com:10010/sms/34020000002020000001/hls/34020000001110000064_37020100001320000003/34020000001110000064_37020100001320000003_live.m3u8?token=V_WKYhFgVuOPeokLEHKymHwAMvyvPXFnu1xGdHQctBH.oxNTk5NzU2Mjc3LCJwIjoiMzA4NjMyYTc4ZCIsInQiOjE1OTk3NTU5NzcsInUiOiIzMDg2MzJhNzhkIn0eyJlIj.GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJhb',
+          videoSource:
+            'https://gbs.liveqing.com:10010/sms/34020000002020000001/hls/34020000001110000064_37020100001320000003/34020000001110000064_37020100001320000003_live.m3u8?token=dL-UEfzsaXXcgkp8KKHc__kcGhLlj9AOAGNNlIz8fiI.oxNTk5NzU2NzM3LCJwIjoiMzA4NjMyYTc4ZCIsInQiOjE1OTk3NTY0MzcsInUiOiIzMDg2MzJhNzhkIn0eyJlIj.GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJhb',
           info: [
             { label: '来源', value: '大气污染监测' },
             { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
@@ -475,7 +474,7 @@ export default {
             infoWindow.open(_this.map, marker.getPosition())
           })
           marker.on('mouseout', function() {
-            // _this.map.clearInfoWindow()
+            _this.map.clearInfoWindow()
           })
           return marker
         })
