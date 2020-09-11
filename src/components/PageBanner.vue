@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <div class="logo">信阳智慧城市综合管理平台</div>
+    <div class="logo">{{ process.env.VUE_APP_TITLE }}</div>
   </div>
 </template>
 
