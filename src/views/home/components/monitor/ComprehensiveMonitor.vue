@@ -100,7 +100,7 @@ export default {
         /* eslint-disable prettier/prettier*/
         { key:'site1', label: '城管报警', count: 0, ratio: 0, color: '#ff0000', disable: false, list: [] },
         { key:'site2', label: '国土资源报警', count: 0, ratio: 0, color: '#f27022', disable: false, list: [] },
-        { key:'site3', label: '空气污染报警', count: 0, ratio: 0, color: '#ffdf00', disable: false, list: [] },
+        { key:'site3', label: '空气污染报警', count: 0, ratio: 0, color: '#CC45EA', disable: false, list: [] },
         { key:'site4', label: '路灯报警', count: 0, ratio: 0, color: '#179eff', disable: false, list: [] }
         /* eslint-enable prettier/prettier*/
       ],
