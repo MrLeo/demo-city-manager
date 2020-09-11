@@ -467,7 +467,7 @@ export default {
       alarm.key
     }',${index})" class="footer-btn" style="background-color:${
                 alarm.color
-              };color:#FFF;width:100px;padding:5px;text-align:center;">实时监控</a>
+              };color:#FFF;width:100px;padding:5px;text-align:center;">查看详情</a>
   </div>
 </div>`,
               offset: new AMap.Pixel(0, -10)
