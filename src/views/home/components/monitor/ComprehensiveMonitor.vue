@@ -142,18 +142,18 @@ export default {
         return {
           lng, // 经度
           lat, // 纬度
-          name: `高点监测`, // 事件名
+          name: `发生森林火情`, // 事件名
           level: '高级', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '天府新区胜利东路456号', // 地点
           cover: require('../../../../../public/cover.png'), // 左侧（视频封面 / 背景图）
           // videoSource: 'https://media.wxzxzj.com/the_garden_of_words_trailer_english__1080p.m3u8',
           // videoSource: 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s-fmp4/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-          videoSource: require('../../../../../public/VID_20200911_143902.mp4'),
+          videoSource: './VID_20200911_143902.mp4',
           info: [
-            { label: '来源', value: '大气污染监测' },
+            { label: '来源', value: '高点监测' },
             { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
-            { label: '地点', value: '信阳市开发区海营水库' },
+            { label: '地点', value: '天府新区胜利东路456号' },
             { label: '摄像机', value: 'CCVT123' },
             { label: '经度', value: lng },
             { label: '纬度', value: lat },

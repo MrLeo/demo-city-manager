@@ -1,7 +1,7 @@
 <template>
   <div v-if="value" class="comprehensive-monitor-detail">
     <div class="menu row center-x">
-      <div class="title">报警详情</div>
+      <div class="title">{{ value.name || '报警详情' }}</div>
       <a-icon class="close" type="close" @click="$emit('input', null)" />
     </div>
     <div class="content row">
