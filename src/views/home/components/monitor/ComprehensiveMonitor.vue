@@ -146,7 +146,7 @@ export default {
           level: '高级', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '天府新区胜利东路456号', // 地点
-          cover: require('../../../../../public/cover.png'), // 左侧（视频封面 / 背景图）
+          cover: './cover.png', // 左侧（视频封面 / 背景图）
           // videoSource: 'https://media.wxzxzj.com/the_garden_of_words_trailer_english__1080p.m3u8',
           // videoSource: 'https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s-fmp4/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
           videoSource: './VID_20200911_143902.mp4',
@@ -187,7 +187,7 @@ export default {
             time: poleItem.fault_dt || '', // 时间
             point: poleItem.point || '', // 灯编号
             position: '', // 地点
-            cover: require('../../../../../public/cover.png') // 左侧（视频封面 / 背景图）
+            cover: './cover.png' // 左侧（视频封面 / 背景图）
           }
           markers.push({
             ...markerInfo,
