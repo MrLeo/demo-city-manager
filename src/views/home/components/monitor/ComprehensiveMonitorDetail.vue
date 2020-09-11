@@ -8,13 +8,21 @@
       <div class="video" :style="{ backgroundImage: `url(${value.cover})` }">
         <!-- https://github.com/redxtech/vue-plyr -->
         <!-- https://github.com/core-player/vue-core-video-player -->
-        <vue-core-video-player
-          v-if="value.videoSource"
-          autoplay
-          :core="isHLS ? HLSCore : false"
-          :cover="value.cover"
-          :src="value.videoSource"
-        ></vue-core-video-player>
+        <template v-if="value.videoSource">
+          <vue-core-video-player
+            v-if="isHLS"
+            autoplay
+            :core="HLSCore"
+            :cover="value.cover"
+            :src="value.videoSource"
+          ></vue-core-video-player>
+          <vue-core-video-player
+            v-else
+            autoplay
+            :cover="value.cover"
+            :src="value.videoSource"
+          ></vue-core-video-player>
+        </template>
       </div>
       <ul class="info">
         <li class="row" v-for="(item, index) in value.info" :key="index">
