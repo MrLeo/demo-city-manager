@@ -8,21 +8,13 @@
       <div class="video" :style="{ backgroundImage: `url(${value.cover})` }">
         <!-- https://github.com/redxtech/vue-plyr -->
         <!-- https://github.com/core-player/vue-core-video-player -->
-        <template v-if="value.videoSource">
-          <vue-core-video-player
-            v-if="isHLS"
-            autoplay
-            :core="HLSCore"
-            :cover="value.cover"
-            :src="value.videoSource"
-          ></vue-core-video-player>
-          <vue-core-video-player
-            v-else
-            autoplay
-            :cover="value.cover"
-            :src="value.videoSource"
-          ></vue-core-video-player>
-        </template>
+        <vue-core-video-player
+          v-if="value.videoSource"
+          autoplay
+          :core="core"
+          :cover="value.cover"
+          :src="value.videoSource"
+        ></vue-core-video-player>
       </div>
       <ul class="info">
         <li class="row" v-for="(item, index) in value.info" :key="index">
@@ -36,7 +28,7 @@
 
 <script>
 import Vue from 'vue'
-import VueCoreVideoPlayer from 'vue-core-video-player' // https://core-player.github.io/vue-core-video-player/zh/
+import VueCoreVideoPlayer, { BaseVideoCore } from 'vue-core-video-player' // https://core-player.github.io/vue-core-video-player/zh/
 import HLSCore from '@core-player/playcore-hls'
 
 Vue.use(VueCoreVideoPlayer, { lang: 'zh-CN' })
@@ -50,14 +42,15 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      HLSCore
-    }
-  },
   computed: {
-    isHLS() {
-      return /\.m3u8/.test(this.value.videoSource)
+    /**
+     * {@link https://sourcegraph.com/github.com/core-player/vue-core-video-player/-/blob/src/core/index.js HLS 视频}
+     */
+    core() {
+      if (/\.m3u8/.test(this.value.videoSource)) {
+        return HLSCore
+      }
+      return BaseVideoCore
     }
   }
 }
