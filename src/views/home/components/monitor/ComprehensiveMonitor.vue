@@ -223,7 +223,7 @@ export default {
           level: '确认中', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '信阳市开发区海营水库', // 地点
-          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          cover: './demo.vue-chartjs.org.png', // 左侧（视频封面 / 背景图）
           info: [
             { label: '来源', value: '大气污染监测' },
             { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
@@ -242,7 +242,7 @@ export default {
           level: '中度污染', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '信阳市开发区城东办事处', // 地点
-          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          cover: './demo.vue-chartjs.org.png', // 左侧（视频封面 / 背景图）
           info: [
             { label: '来源', value: '大气污染监测' },
             { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
@@ -261,7 +261,7 @@ export default {
           level: '轻度污染', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
           position: '信阳市开发区新栗集团', // 地点
-          cover: require('../../../../../public/demo.vue-chartjs.org.png'), // 左侧（视频封面 / 背景图）
+          cover: './demo.vue-chartjs.org.png', // 左侧（视频封面 / 背景图）
           info: [
             { label: '来源', value: '大气污染监测' },
             { label: '时间', value: moment().format('YYYY-MM-DD HH:mm:ss') },
