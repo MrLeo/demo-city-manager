@@ -116,9 +116,11 @@ export default {
   },
   methods: {
     async initData() {
-      await this.getAlarms()
       this.initMap()
       this.geoDistrictExplorer()
+
+      await this.getAlarms()
+
       this.initMarkers()
     },
 
@@ -430,7 +432,7 @@ export default {
           console.log(`[LOG]: initMarkers -> item`, item)
           const marker = new AMap.Marker({
             position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            content: `<div class="marker ${alarm.key}">${alarm.key}</div>`, // 自定义点标记覆盖物内容
+            content: `<div class="marker ${alarm.key}">${alarm.label.substring(0, 2)}</div>`, // 自定义点标记覆盖物内容
             offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
             anchor: 'bottom-center', // 设置锚点方位
             extData: item
