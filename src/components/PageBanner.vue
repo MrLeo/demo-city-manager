@@ -10,7 +10,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: process.env.VUE_APP_NOT_SECRET_CODE
+      default: process.env.VUE_APP_TITLE
     }
   }
 }
