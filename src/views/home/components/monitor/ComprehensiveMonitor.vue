@@ -519,11 +519,17 @@ export default {
 .comprehensive-monitor {
   .map {
     position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .map-container {
     width: 100%;
-    height: 720px;
+    height: 100%;
     background-color: #0a1944;
 
     >>> .amap-logo {

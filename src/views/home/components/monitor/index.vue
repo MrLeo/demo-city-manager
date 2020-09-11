@@ -2,7 +2,7 @@
   <div class="row monitor">
     <div class="column main">
       <Tabs v-model="tab"></Tabs>
-      <component :is="tab"></component>
+      <component class="tab__content" :is="tab"></component>
     </div>
     <Rank></Rank>
   </div>
@@ -35,11 +35,16 @@ export default {
 
 <style lang="scss" scoped>
 .monitor {
-  align-items: flex-start;
+  align-items: stretch;
   .main {
     // width: 1244px;
     flex: 1;
     background-color: #0a1944;
+
+    .tab__content {
+      flex: 1;
+      height: calc(100% - 59px);
+    }
   }
 }
 </style>

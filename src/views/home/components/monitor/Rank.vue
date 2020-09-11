@@ -71,6 +71,10 @@ export default {
   &__block {
     padding: 35px 22px;
     width: 401px;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
   &__title {
     line-height: 20px;
