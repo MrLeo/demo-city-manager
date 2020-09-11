@@ -11,7 +11,7 @@
         <vue-core-video-player
           v-if="value.videoSource"
           autoplay
-          :core="HLSCore"
+          :core="isHLS ? HLSCore : false"
           :cover="value.cover"
           :src="value.videoSource"
         ></vue-core-video-player>
@@ -45,6 +45,11 @@ export default {
   data() {
     return {
       HLSCore
+    }
+  },
+  computed: {
+    isHLS() {
+      return /\.m3u8/.test(this.value.videoSource)
     }
   }
 }
