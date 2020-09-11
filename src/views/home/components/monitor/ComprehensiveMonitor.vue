@@ -166,7 +166,7 @@ export default {
 
       const alarm = this.alarms[index]
       alarm.count = markers.length
-      alarm.ratio = _.random(-1, 1)
+      // alarm.ratio = _.random(-1, 1)
       alarm.list = markers
 
       return Promise.resolve(markers)
@@ -207,7 +207,7 @@ export default {
 
       const alarm = this.alarms[3]
       alarm.count = markers.length
-      alarm.ratio = _.random(-1, 1)
+      // alarm.ratio = _.random(-1, 1)
       alarm.list = markers
 
       return markers
@@ -278,7 +278,7 @@ export default {
 
       const alarm = this.alarms[2]
       alarm.count = markers.length
-      alarm.ratio = _.random(-1, 1)
+      // alarm.ratio = _.random(-1, 1)
       alarm.list = markers
 
       return Promise.resolve(markers)
