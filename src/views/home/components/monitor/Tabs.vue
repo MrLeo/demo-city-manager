@@ -44,7 +44,7 @@ export default {
   padding: 0 36px;
   align-items: center;
   justify-content: space-between;
-  width: 1245px;
+  width: 100%;
   height: $h;
   line-height: $h;
   background-color: rgba(37, 110, 255, 0.09);

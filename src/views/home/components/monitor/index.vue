@@ -37,7 +37,8 @@ export default {
 .monitor {
   align-items: flex-start;
   .main {
-    width: 1244px;
+    // width: 1244px;
+    flex: 1;
     background-color: #0a1944;
   }
 }

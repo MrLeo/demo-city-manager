@@ -522,7 +522,7 @@ export default {
   }
 
   .map-container {
-    width: 1244px;
+    width: 100%;
     height: 720px;
     background-color: #0a1944;
 
