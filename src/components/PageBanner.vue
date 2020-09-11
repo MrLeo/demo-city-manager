@@ -1,12 +1,18 @@
 <template>
   <div class="banner">
-    <div class="logo">{{ process.env.VUE_APP_TITLE }}</div>
+    <div class="logo">{{ title }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'PageBanner'
+  name: 'PageBanner',
+  props: {
+    title: {
+      type: String,
+      default: process.env.VUE_APP_NOT_SECRET_CODE
+    }
+  }
 }
 </script>
 
