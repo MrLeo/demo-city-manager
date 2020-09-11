@@ -236,7 +236,7 @@ export default {
         },
         {
           lng: '114.16058', // 经度
-          lat: '332.13957', // 纬度
+          lat: '32.13957', // 纬度
           name: `城东办事处大气污染检测指数超标`, // 事件名
           level: '中度污染', // 事件等级
           time: moment().format('YYYY-MM-DD HH:mm:ss'), // 时间
