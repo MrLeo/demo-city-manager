@@ -47,6 +47,9 @@ export default {
 
   .page {
     padding: 25px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 }
 

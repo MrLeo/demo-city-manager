@@ -35,6 +35,7 @@ export default {
 
 <style lang="scss" scoped>
 .monitor {
+  flex: 1;
   align-items: stretch;
   .main {
     // width: 1244px;

@@ -601,7 +601,7 @@ export default {
 .marker {
   width: 44px;
   height: 55px;
-  padding-top: 1px;
+  padding-top: 4px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
