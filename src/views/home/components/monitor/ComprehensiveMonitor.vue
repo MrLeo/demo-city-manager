@@ -445,8 +445,8 @@ export default {
 <div class="info-window" style="background-color: rgb(77,159,224,0.6);">
   <div class="info-window__head row center-x" style="background-color: ${
     alarm.color
-  };color: #FFF;padding: 2px;font-size: 16px;font-weight: 900;">${alarm.label}</div>
-  <h1 class="info-window__title row center-x" style="flex-wrap: nowrap;color: #fff; font-size: 20px; font-weight: 900; margin: 5px; white-space: nowrap;">
+  };color: #FFF;padding: 2px;font-size: 14px;font-weight: 900;">${alarm.label}</div>
+  <h1 class="info-window__title row center-x" style="flex-wrap: nowrap;color: #fff; font-size: 16px; font-weight: 900; margin: 5px; white-space: nowrap;">
     <span class="info-window__title-txt">${item.name}</span>&nbsp;
     <span class="level" style="white-space: nowrap;font-size:10px;background-color:#f00;">${
       item.level
