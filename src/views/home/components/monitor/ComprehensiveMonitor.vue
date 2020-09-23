@@ -138,7 +138,7 @@ export default {
     /** 获取『智慧城管』报警数据 */
     async getChengguanAlarm() {
       const markers = []
-
+      // 获取地图Marker数据
       const res = await axios.post(`http://47.93.239.193/onenet/wx/megcity/eventsPaged`, {
         endTime: 1600732470590,
         pageNo: 1,
@@ -146,6 +146,7 @@ export default {
         startTime: 1577779200000
       })
       const markInfos = await Promise.all(
+        // 组装Marker数据
         _.map(res.data, marker => {
           const { lng, lat } = gps(115.221717, 32.0189, 40000)
           markers.push({
@@ -158,9 +159,11 @@ export default {
             cover: './cover.png', // 左侧（视频封面 / 背景图）
             videoSource: ''
           })
+          // 获取弹窗详情数据
           return axios.get(`http://47.93.239.193/onenet/wx/megcity/eventvo/${marker.caseNumber}`)
         })
       )
+      // 组装弹窗详情数据
       _.forEach(markInfos, ({ data: info }, index) => {
         markers[index]['videoSource'] = info.causeVideoUri
         markers[index]['info'] = [
