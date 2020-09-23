@@ -128,15 +128,62 @@ export default {
     async getAlarms() {
       // TODO 报警事件数据 step-2 生成数据
       return await Promise.all([
-        this.getLandResources(0),
-        this.getLandResources(1),
-        this.getLightPoleData(),
-        this.getAirPollution()
+        this.getChengguanAlarm(),
+        this.getLandResources(),
+        this.getAirPollution(),
+        this.getLightPoleData()
       ])
     },
 
-    /** 获取『国土资源』『智慧城管』报警数据 */
-    async getLandResources(index) {
+    /** 获取『智慧城管』报警数据 */
+    async getChengguanAlarm() {
+      const markers = []
+
+      const res = await axios.post(`http://47.93.239.193/onenet/wx/megcity/eventsPaged`, {
+        endTime: 1600732470590,
+        pageNo: 1,
+        pageSize: '10',
+        startTime: 1577779200000
+      })
+      const markInfos = await Promise.all(
+        _.map(res.data, marker => {
+          const { lng, lat } = gps(115.221717, 32.0189, 40000)
+          markers.push({
+            lng: _.get(marker, 'location.lon', lng), // 经度
+            lat: _.get(marker, 'location.lat', lat), // 纬度
+            name: marker.type || '', // 事件名
+            level: '高级', // 事件等级
+            time: marker.createTimeStr || '', // 时间
+            position: marker.address || '', // 地点
+            cover: './cover.png', // 左侧（视频封面 / 背景图）
+            videoSource: ''
+          })
+          return axios.get(`http://47.93.239.193/onenet/wx/megcity/eventvo/${marker.caseNumber}`)
+        })
+      )
+      _.forEach(markInfos, ({ data: info }, index) => {
+        markers[index]['videoSource'] = info.causeVideoUri
+        markers[index]['info'] = [
+          { label: '来源', value: '低点监测' },
+          { label: '时间', value: info.createTimeStr || '' },
+          { label: '地点', value: info.address || '' },
+          { label: '摄像机', value: info.crameName || '' },
+          { label: '经度', value: info.lon || '' },
+          { label: '纬度', value: info.lat || '' },
+          { label: '状态', value: info.state || '' }
+        ]
+      })
+
+      const alarm = this.alarms[0]
+      alarm.count = markers.length
+      alarm.list = markers
+      // alarm.ratio = _.random(-1, 1)
+
+      return Promise.resolve(markers)
+    },
+
+    /** 获取『国土资源』报警数据 */
+    async getLandResources() {
       const markers = _.map(Array(_.random(0, 10)), () => {
         const { lng, lat } = gps(115.221717, 32.0189, 40000)
         return {
@@ -163,54 +210,12 @@ export default {
         }
       })
 
-      const alarm = this.alarms[index]
+      const alarm = this.alarms[1]
       alarm.count = markers.length
-      // alarm.ratio = _.random(-1, 1)
       alarm.list = markers
+      // alarm.ratio = _.random(-1, 1)
 
       return Promise.resolve(markers)
-    },
-
-    /** 获取『灯联网』报警数据 */
-    async getLightPoleData() {
-      // eslint-disable-next-line prettier/prettier
-      const { data: { pole,transf } } = await axios.get('http://114.215.143.58:5502/api/Transfinfo.ashx?code=3801')
-
-      const markers = []
-      _.forEach(pole, poleItem => {
-        if (poleItem.pole_state === 5) {
-          const markerInfo = {
-            lng: poleItem.lng_baidu, // 经度
-            lat: poleItem.lat_baidu, // 纬度
-            name: `灯联网报警`, // 事件名
-            level: '故障', // 事件等级
-            time: poleItem.fault_dt || '', // 时间
-            point: poleItem.point || '', // 灯编号
-            position: '', // 地点
-            cover: './cover.png' // 左侧（视频封面 / 背景图）
-          }
-          markers.push({
-            ...markerInfo,
-            info: [
-              { label: '来源', value: markerInfo.name },
-              { label: '时间', value: markerInfo.time },
-              { label: '经度', value: markerInfo.lng || '' },
-              { label: '纬度', value: markerInfo.lat || '' },
-              { label: '集中器', value: transf.name || '' },
-              { label: '灯编号', value: markerInfo.point || '' },
-              { label: '状态', value: markerInfo.level }
-            ]
-          })
-        }
-      })
-
-      const alarm = this.alarms[3]
-      alarm.count = markers.length
-      // alarm.ratio = _.random(-1, 1)
-      alarm.list = markers
-
-      return markers
-      // return _.filter(pole, poleItem => poleItem.pole_state === 5)
     },
 
     /** 获取『空气污染』报警数据 */
@@ -277,10 +282,52 @@ export default {
 
       const alarm = this.alarms[2]
       alarm.count = markers.length
-      // alarm.ratio = _.random(-1, 1)
       alarm.list = markers
+      // alarm.ratio = _.random(-1, 1)
 
       return Promise.resolve(markers)
+    },
+
+    /** 获取『灯联网』报警数据 */
+    async getLightPoleData() {
+      // eslint-disable-next-line prettier/prettier
+      const { data: { pole,transf } } = await axios.get('http://114.215.143.58:5502/api/Transfinfo.ashx?code=3801')
+
+      const markers = []
+      _.forEach(pole, poleItem => {
+        if (poleItem.pole_state === 5) {
+          const markerInfo = {
+            lng: poleItem.lng_baidu, // 经度
+            lat: poleItem.lat_baidu, // 纬度
+            name: `灯联网报警`, // 事件名
+            level: '故障', // 事件等级
+            time: poleItem.fault_dt || '', // 时间
+            point: poleItem.point || '', // 灯编号
+            position: '', // 地点
+            cover: './cover.png' // 左侧（视频封面 / 背景图）
+          }
+          markers.push({
+            ...markerInfo,
+            info: [
+              { label: '来源', value: markerInfo.name },
+              { label: '时间', value: markerInfo.time },
+              { label: '经度', value: markerInfo.lng || '' },
+              { label: '纬度', value: markerInfo.lat || '' },
+              { label: '集中器', value: transf.name || '' },
+              { label: '灯编号', value: markerInfo.point || '' },
+              { label: '状态', value: markerInfo.level }
+            ]
+          })
+        }
+      })
+
+      const alarm = this.alarms[3]
+      alarm.count = markers.length
+      alarm.list = markers
+      // alarm.ratio = _.random(-1, 1)
+
+      return markers
+      // return _.filter(pole, poleItem => poleItem.pole_state === 5)
     },
 
     /** 初始化地图 */
@@ -426,9 +473,7 @@ export default {
 
       // TODO 报警事件Marker
       _.forEach(this.alarms, (alarm, index) => {
-        console.log(`[LOG]: initMarkers -> alarm`, alarm)
         const markers = _.map(alarm.list, (item, index) => {
-          console.log(`[LOG]: initMarkers -> item`, item)
           const marker = new AMap.Marker({
             position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
             content: `<div class="marker ${alarm.key}">${alarm.label.substring(0, 2)}</div>`, // 自定义点标记覆盖物内容

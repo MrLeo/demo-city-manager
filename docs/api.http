@@ -1,0 +1,16 @@
+@host=http://47.93.239.193/onenet
+
+### 查询事件列表
+# @name eventsPaged
+post {{host}}/wx/megcity/eventsPaged
+Content-Type: application/json
+
+{
+  "endTime":1600732470590,
+  "pageNo":1,
+  "pageSize":"10",
+  "startTime":1577779200000
+}
+
+### 获取事件 详情
+get {{host}}/wx/megcity/eventvo/{{eventsPaged.response.body.$[0].caseNumber}}
