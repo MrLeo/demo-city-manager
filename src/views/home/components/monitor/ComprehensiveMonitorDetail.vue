@@ -5,18 +5,9 @@
       <a-icon class="close" type="close" @click="$emit('input', null)" />
     </div>
     <div class="content row">
-      <div class="video" :style="{ backgroundImage: `url(${value.cover})` }">
-        <!-- https://github.com/redxtech/vue-plyr -->
-        <!-- https://github.com/core-player/vue-core-video-player -->
-        <vue-core-video-player
-          v-if="value.videoSource"
-          autoplay
-          preload="metadata"
-          :core="core"
-          :cover="value.cover"
-          :src="videoSource"
-        ></vue-core-video-player>
-      </div>
+      <section id="video" class="video" :style="{ backgroundImage: `url(${value.cover})` }">
+        <!-- http://chimee.org/docs/start.html -->
+      </section>
       <ul class="info">
         <li class="row" v-for="(item, index) in value.info" :key="index">
           <div class="label">{{ item.label }}</div>
@@ -28,11 +19,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import VueCoreVideoPlayer, { BaseVideoCore } from 'vue-core-video-player' // https://core-player.github.io/vue-core-video-player/zh/
-import HLSCore from '@core-player/playcore-hls'
-
-Vue.use(VueCoreVideoPlayer, { lang: 'zh-CN' })
+import Chimee from 'chimee'
+import ChimeePlayer from 'chimee-player'
+import 'chimee-player/lib/chimee-player.browser.css'
 
 export default {
   props: {
@@ -42,29 +31,52 @@ export default {
         return null
       }
     },
-    isHLS: {
-      type: Boolean,
-      default: false
+    // flv hls mp4
+    box: { type: String, default: 'mp4' },
+    isLive: { type: Boolean, default: false }
+  },
+  data() {
+    return {
+      player: null
     }
   },
-  computed: {
-    /**
-     * {@link https://sourcegraph.com/github.com/core-player/vue-core-video-player/-/blob/src/core/index.js HLS 视频}
-     */
-    core() {
-      if (this.isHLS || /\.m3u8/.test(this.value.videoSource)) {
-        return HLSCore
+  watch: {
+    value: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        if (!val || !val.videoSource) {
+          this.player = null
+          return
+        }
+        this.initPlayer()
       }
-      return BaseVideoCore
-    },
-    videoSource() {
-      const src = this.value.videoSource
-      return src
+    }
+  },
+  methods: {
+    async initPlayer() {
+      this.$nextTick(() => {
+        Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
+        this.player = new ChimeePlayer({
+          wrapper: '#video',
+          src: this.value.videoSource,
+          box: this.box,
+          isLive: this.isLive,
+          controls: true,
+          autoplay: true
+        })
+        setTimeout(() => this.player.play(), 1000)
+      })
     }
   }
 }
 </script>
 
+<style>
+.chimee-log {
+  color: #000;
+}
+</style>
 <style lang="scss" scoped>
 .comprehensive-monitor-detail {
   position: fixed;
