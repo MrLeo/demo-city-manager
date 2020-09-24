@@ -29,7 +29,7 @@
         </ul>
       </div>
     </div>
-    <ComprehensiveMonitorDetail v-model="markerDetail"></ComprehensiveMonitorDetail>
+    <ComprehensiveMonitorDetail v-model="markerDetail" :isHLS="true"></ComprehensiveMonitorDetail>
   </div>
 </template>
 
