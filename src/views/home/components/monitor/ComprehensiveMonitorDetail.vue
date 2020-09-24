@@ -14,7 +14,7 @@
           preload="metadata"
           :core="core"
           :cover="value.cover"
-          :src="value.videoSource"
+          :src="videoSource"
         ></vue-core-video-player>
       </div>
       <ul class="info">
@@ -56,6 +56,10 @@ export default {
         return HLSCore
       }
       return BaseVideoCore
+    },
+    videoSource() {
+      const src = this.value.videoSource
+      return src
     }
   }
 }
