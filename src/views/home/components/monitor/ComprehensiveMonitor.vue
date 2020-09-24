@@ -140,7 +140,7 @@ export default {
       const markers = []
       // 获取地图Marker数据
       const res = await axios.post(`http://47.93.239.193/onenet/wx/megcity/eventsPaged`, {
-        endTime: 1600732470590,
+        endTime: 1609401600000,
         pageNo: 1,
         pageSize: '10',
         startTime: 1577779200000
@@ -170,7 +170,7 @@ export default {
           { label: '来源', value: '低点监测' },
           { label: '时间', value: info.createTimeStr || '' },
           { label: '地点', value: info.address || '' },
-          { label: '摄像机', value: info.crameName || '' },
+          { label: '摄像机', value: info.deviceName || '' },
           { label: '经度', value: info.lon || '' },
           { label: '纬度', value: info.lat || '' },
           { label: '状态', value: info.state || '' }
