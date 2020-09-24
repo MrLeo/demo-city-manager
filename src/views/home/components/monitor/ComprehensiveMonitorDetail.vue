@@ -11,6 +11,7 @@
         <vue-core-video-player
           v-if="value.videoSource"
           autoplay
+          preload="metadata"
           :core="core"
           :cover="value.cover"
           :src="value.videoSource"
