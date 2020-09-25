@@ -27,7 +27,7 @@
 import Chimee from 'chimee'
 import ChimeePlayer from 'chimee-player'
 import 'chimee-player/lib/chimee-player.browser.css'
-import axios from 'axios'
+// import axios from 'axios'
 
 export default {
   props: {
@@ -68,40 +68,40 @@ export default {
     async initPlayer() {
       Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
       setTimeout(async () => {
-        if (!window.MediaSource) console.warn('The Media Source Extensions API is not supported.')
+        // if (!window.MediaSource) console.warn('The Media Source Extensions API is not supported.')
 
-        const mediaSource = new MediaSource()
-        const src = URL.createObjectURL(mediaSource)
+        // const mediaSource = new MediaSource()
+        // const src = URL.createObjectURL(mediaSource)
 
-        mediaSource.addEventListener('sourceopen', async e => {
-          // URL.revokeObjectURL(src)
-          const mediaSource = e.target
-          const mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
-          const sourceBuffer = mediaSource.addSourceBuffer(mime)
-          console.log(`[LOG]: initPlayer -> sourceBuffer1`, sourceBuffer)
+        // mediaSource.addEventListener('sourceopen', async e => {
+        //   // URL.revokeObjectURL(src)
+        //   const mediaSource = e.target
+        //   const mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+        //   const sourceBuffer = mediaSource.addSourceBuffer(mime)
+        //   console.log(`[LOG]: initPlayer -> sourceBuffer1`, sourceBuffer)
 
-          sourceBuffer.addEventListener('updateend', () => {
-            if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
-              mediaSource.endOfStream()
-            }
-          })
+        //   sourceBuffer.addEventListener('updateend', () => {
+        //     if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+        //       mediaSource.endOfStream()
+        //     }
+        //   })
 
-          const { data: videoData } = await axios.get(this.videoSource, {
-            // headers: {
-            //   Range: 'bytes=0-100'
-            // },
-            responseType: 'arraybuffer'
-          })
-          console.log(`[LOG]: initPlayer -> videoData`, videoData)
+        //   const { data: videoData } = await axios.get(this.videoSource, {
+        //     // headers: {
+        //     //   Range: 'bytes=0-100'
+        //     // },
+        //     responseType: 'arraybuffer'
+        //   })
+        //   console.log(`[LOG]: initPlayer -> videoData`, videoData)
 
-          sourceBuffer.appendBuffer(videoData)
-          console.log(`[LOG]: initPlayer -> sourceBuffer2`, sourceBuffer)
-        })
+        //   sourceBuffer.appendBuffer(videoData)
+        //   console.log(`[LOG]: initPlayer -> sourceBuffer2`, sourceBuffer)
+        // })
 
         this.player = new ChimeePlayer({
           wrapper: '#video',
-          // src: this.videoSource,
-          src,
+          src: this.videoSource,
+          // src,
           box: this.box,
           isLive: this.isLive,
           controls: true,

@@ -165,7 +165,7 @@ export default {
       )
       // 组装弹窗详情数据
       _.forEach(markInfos, ({ data: info }, index) => {
-        markers[index]['videoSource'] = info.causeVideoUri
+        markers[index]['videoSource'] = 'http://47.93.239.193/demo.mp4' //info.causeVideoUri
         markers[index]['info'] = [
           { label: '来源', value: '低点监测' },
           { label: '时间', value: info.createTimeStr || '' },
