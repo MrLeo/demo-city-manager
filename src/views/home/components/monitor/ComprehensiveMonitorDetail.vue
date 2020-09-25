@@ -5,7 +5,12 @@
       <a-icon class="close" type="close" @click="$emit('input', null)" />
     </div>
     <div class="content row">
-      <section id="video" class="video" :style="{ backgroundImage: `url(${value.cover})` }">
+      <section
+        ref="video"
+        id="video"
+        class="video"
+        :style="{ backgroundImage: `url(${value.cover})` }"
+      >
         <!-- http://chimee.org/docs/start.html -->
       </section>
       <ul class="info">
@@ -22,6 +27,7 @@
 import Chimee from 'chimee'
 import ChimeePlayer from 'chimee-player'
 import 'chimee-player/lib/chimee-player.browser.css'
+import axios from 'axios'
 
 export default {
   props: {
@@ -40,6 +46,11 @@ export default {
       player: null
     }
   },
+  computed: {
+    videoSource() {
+      return this.value.videoSource
+    }
+  },
   watch: {
     value: {
       deep: true,
@@ -55,18 +66,48 @@ export default {
   },
   methods: {
     async initPlayer() {
-      this.$nextTick(() => {
-        Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
+      Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
+      setTimeout(async () => {
+        if (!window.MediaSource) {
+          console.warn('The Media Source Extensions API is not supported.')
+        }
+
+        const mediaSource = new MediaSource()
+        const src = URL.createObjectURL(mediaSource)
+
+        mediaSource.addEventListener('sourceopen', async e => {
+          // URL.revokeObjectURL(src)
+          const mediaSource = e.target
+          const mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+          const sourceBuffer = mediaSource.addSourceBuffer(mime)
+          console.log(`[LOG]: initPlayer -> sourceBuffer1`, sourceBuffer)
+
+          sourceBuffer.addEventListener('updateend', () => {
+            if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+              mediaSource.endOfStream()
+            }
+          })
+
+          const { data: videoData } = await axios.get(this.videoSource, {
+            responseType: 'arraybuffer'
+          })
+          console.log(`[LOG]: initPlayer -> videoData`, videoData)
+
+          sourceBuffer.appendBuffer(videoData)
+          console.log(`[LOG]: initPlayer -> sourceBuffer2`, sourceBuffer)
+        })
+
         this.player = new ChimeePlayer({
           wrapper: '#video',
-          src: this.value.videoSource,
+          // src: this.videoSource,
+          src,
           box: this.box,
           isLive: this.isLive,
           controls: true,
           autoplay: true
         })
-        setTimeout(() => this.player.play(), 1000)
-      })
+        this.player.play()
+      }, 0)
     }
   }
 }
