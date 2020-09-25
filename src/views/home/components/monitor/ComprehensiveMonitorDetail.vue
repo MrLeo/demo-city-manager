@@ -10,9 +10,7 @@
         id="video"
         class="video"
         :style="{ backgroundImage: `url(${value.cover})` }"
-      >
-        <!-- http://chimee.org/docs/start.html -->
-      </section>
+      ></section>
       <ul class="info">
         <li class="row" v-for="(item, index) in value.info" :key="index">
           <div class="label">{{ item.label }}</div>
@@ -24,6 +22,8 @@
 </template>
 
 <script>
+// https://juejin.im/post/6850037275579121671
+// http://chimee.org/docs/start.html
 import Chimee from 'chimee'
 import ChimeePlayer from 'chimee-player'
 import 'chimee-player/lib/chimee-player.browser.css'
@@ -68,9 +68,7 @@ export default {
     async initPlayer() {
       Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
       setTimeout(async () => {
-        if (!window.MediaSource) {
-          console.warn('The Media Source Extensions API is not supported.')
-        }
+        if (!window.MediaSource) console.warn('The Media Source Extensions API is not supported.')
 
         const mediaSource = new MediaSource()
         const src = URL.createObjectURL(mediaSource)
@@ -89,6 +87,9 @@ export default {
           })
 
           const { data: videoData } = await axios.get(this.videoSource, {
+            // headers: {
+            //   Range: 'bytes=0-100'
+            // },
             responseType: 'arraybuffer'
           })
           console.log(`[LOG]: initPlayer -> videoData`, videoData)
