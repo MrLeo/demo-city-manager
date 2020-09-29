@@ -26,7 +26,15 @@ jobs:
         with:
           node-version: 12
 
-      - run: npm install
-      - run: npm run build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install and Build
+        run: |
+          npm install
+          npm run-script build
+
+      # react项目的FOLDER为build，vue项目改为dist
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
