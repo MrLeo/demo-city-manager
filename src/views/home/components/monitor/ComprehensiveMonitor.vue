@@ -41,6 +41,8 @@ import moment from 'moment'
 import { gps } from '../../../../util/random'
 import ComprehensiveMonitorDetail from './ComprehensiveMonitorDetail.vue'
 
+axios.defaults.timeout = 3000
+
 export default {
   components: { ComprehensiveMonitorDetail },
   data() {
@@ -119,7 +121,11 @@ export default {
       this.initMap()
       this.geoDistrictExplorer()
 
-      await this.getAlarms()
+      try {
+        await this.getAlarms()
+      } catch (err) {
+        console.error(`[LOG]: getAlarms -> error`, err)
+      }
 
       this.initMarkers()
     },
@@ -466,71 +472,75 @@ export default {
 
     /** 初始化Marker */
     initMarkers() {
-      const _this = this
+      try {
+        const _this = this
 
-      window.onMarkerClick = (key, index) => {
-        const alarm = _.find(this.alarms, alarm => alarm.key === key)
-        const marker = alarm.list[index] || {}
-        this.markerDetail = marker
-      }
+        window.onMarkerClick = (key, index) => {
+          const alarm = _.find(this.alarms, alarm => alarm.key === key)
+          const marker = alarm.list[index] || {}
+          this.markerDetail = marker
+        }
 
-      // TODO 报警事件Marker
-      _.forEach(this.alarms, (alarm, index) => {
-        const markers = _.map(alarm.list, (item, index) => {
-          const marker = new AMap.Marker({
-            position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            content: `<div class="marker ${alarm.key}">${alarm.label.substring(0, 2)}</div>`, // 自定义点标记覆盖物内容
-            offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
-            anchor: 'bottom-center', // 设置锚点方位
-            extData: item
-          })
-          marker.on('click', function() {
-            _this.markerDetail = this.getExtData()
-          })
-          marker.on('mouseover', function() {
-            const infoWindow = new AMap.InfoWindow({
-              isCustom: true, //使用自定义窗体
-              content: `
-<div class="info-window" style="background-color: rgb(77,159,224,0.6);">
-  <div class="info-window__head row center-x" style="background-color: ${
-    alarm.color
-  };color: #FFF;padding: 2px;font-size: 14px;font-weight: 900;">${alarm.label}</div>
-  <h1 class="info-window__title row center-x" style="flex-wrap: nowrap;color: #fff; font-size: 16px; font-weight: 900; margin: 5px; white-space: nowrap;">
-    <span class="info-window__title-txt">${item.name}</span>&nbsp;
-    <span class="level" style="white-space: nowrap;font-size:10px;background-color:#f00;">${
-      item.level
-    }</span>
-  </h1>
-  <ul style="padding:5px;">
-    <li class="row" style="${item.time ? '' : 'display:none'}">
-      <div class="label" style="width:30px;">时间</div>
-      <div class="value">${item.time}</div>
-    </li>
-    <li class="row" style="${item.position ? '' : 'display:none'}">
-      <div class="label" style="width:30px;">地点</div>
-      <div class="value">${item.position}</div>
-    </li>
-  </ul>
-  <div class="info-window__footer" style="display:flex;justify-content:flex-end;padding:5px;">
-    <a href="javascript:window.onMarkerClick('${
-      alarm.key
-    }',${index})" class="footer-btn" style="background-color:${
-                alarm.color
-              };color:#FFF;width:100px;padding:5px;text-align:center;">查看详情</a>
-  </div>
-</div>`,
-              offset: new AMap.Pixel(0, -10)
+        // TODO 报警事件Marker
+        _.forEach(this.alarms, (alarm, index) => {
+          const markers = _.map(alarm.list, (item, index) => {
+            const marker = new AMap.Marker({
+              position: new AMap.LngLat(item.lng, item.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+              content: `<div class="marker ${alarm.key}">${alarm.label.substring(0, 2)}</div>`, // 自定义点标记覆盖物内容
+              offset: new AMap.Pixel(0, 0), // 设置点标记偏移量
+              anchor: 'bottom-center', // 设置锚点方位
+              extData: item
             })
-            infoWindow.open(_this.map, marker.getPosition())
+            marker.on('click', function() {
+              _this.markerDetail = this.getExtData()
+            })
+            marker.on('mouseover', function() {
+              const infoWindow = new AMap.InfoWindow({
+                isCustom: true, //使用自定义窗体
+                content: `
+  <div class="info-window" style="background-color: rgb(77,159,224,0.6);">
+    <div class="info-window__head row center-x" style="background-color: ${
+      alarm.color
+    };color: #FFF;padding: 2px;font-size: 14px;font-weight: 900;">${alarm.label}</div>
+    <h1 class="info-window__title row center-x" style="flex-wrap: nowrap;color: #fff; font-size: 16px; font-weight: 900; margin: 5px; white-space: nowrap;">
+      <span class="info-window__title-txt">${item.name}</span>&nbsp;
+      <span class="level" style="white-space: nowrap;font-size:10px;background-color:#f00;">${
+        item.level
+      }</span>
+    </h1>
+    <ul style="padding:5px;">
+      <li class="row" style="${item.time ? '' : 'display:none'}">
+        <div class="label" style="width:30px;">时间</div>
+        <div class="value">${item.time}</div>
+      </li>
+      <li class="row" style="${item.position ? '' : 'display:none'}">
+        <div class="label" style="width:30px;">地点</div>
+        <div class="value">${item.position}</div>
+      </li>
+    </ul>
+    <div class="info-window__footer" style="display:flex;justify-content:flex-end;padding:5px;">
+      <a href="javascript:window.onMarkerClick('${
+        alarm.key
+      }',${index})" class="footer-btn" style="background-color:${
+                  alarm.color
+                };color:#FFF;width:100px;padding:5px;text-align:center;">查看详情</a>
+    </div>
+  </div>`,
+                offset: new AMap.Pixel(0, -10)
+              })
+              infoWindow.open(_this.map, marker.getPosition())
+            })
+            marker.on('mouseout', function() {
+              _this.map.clearInfoWindow()
+            })
+            return marker
           })
-          marker.on('mouseout', function() {
-            _this.map.clearInfoWindow()
-          })
-          return marker
+          this.markers.splice(index, 1, markers)
+          this.map.add(markers)
         })
-        this.markers.splice(index, 1, markers)
-        this.map.add(markers)
-      })
+      } catch (err) {
+        console.log(`[LOG]: initMarkers -> err`, err)
+      }
     },
 
     /** 点击页脚报警事件 */
