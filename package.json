@@ -12,6 +12,10 @@
     "url": "http://59.110.8.170:8082/hezongkun/xy-demo.git"
   },
   "dependencies": {
+    "@megvii-video-player/plugin-structure-drawer": "^2.0.16",
+    "@megvii-video-player/plugin-video-build-in": "^2.0.18",
+    "@megvii-video-player/plugin-video-debug": "^2.0.17",
+    "@megvii-video-player/vue-player": "^2.0.18",
     "@core-player/playcore-hls": "^0.1.1",
     "ant-design-vue": "^1.6.5",
     "axios": "^0.20.0",
@@ -21,6 +25,7 @@
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
+    "megvii-http": "^1.0.2",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
     "vue-core-video-player": "^0.1.9",

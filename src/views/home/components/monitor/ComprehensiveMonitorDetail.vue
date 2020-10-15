@@ -5,8 +5,10 @@
       <a-icon class="close" type="close" @click="$emit('input', null)" />
     </div>
     <div class="content row">
+      <meg-file-player v-if="isMeg" class="video" title="meg file player" :socket-url="videoSource">
+      </meg-file-player>
       <section
-        ref="video"
+        v-else
         id="video"
         class="video"
         :style="{ backgroundImage: `url(${value.cover})` }"
@@ -29,6 +31,10 @@ import ChimeePlayer from 'chimee-player'
 import 'chimee-player/lib/chimee-player.browser.css'
 // import axios from 'axios'
 
+import Vue from 'vue'
+import MegviiVideoPlayer from '@megvii-video-player/vue-player'
+Vue.use(MegviiVideoPlayer)
+
 export default {
   props: {
     value: {
@@ -43,6 +49,7 @@ export default {
   },
   data() {
     return {
+      isMeg: false,
       player: null
     }
   },
@@ -65,39 +72,17 @@ export default {
     }
   },
   methods: {
-    async initPlayer() {
+    initPlayer() {
+      if (/^wss?:/.test(this.videoSource)) {
+        this.isMeg = true
+      } else {
+        this.isMeg = false
+        this.initChimeePlayer()
+      }
+    },
+    async initChimeePlayer() {
       Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
       setTimeout(async () => {
-        // if (!window.MediaSource) console.warn('The Media Source Extensions API is not supported.')
-
-        // const mediaSource = new MediaSource()
-        // const src = URL.createObjectURL(mediaSource)
-
-        // mediaSource.addEventListener('sourceopen', async e => {
-        //   // URL.revokeObjectURL(src)
-        //   const mediaSource = e.target
-        //   const mime = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
-        //   const sourceBuffer = mediaSource.addSourceBuffer(mime)
-        //   console.log(`[LOG]: initPlayer -> sourceBuffer1`, sourceBuffer)
-
-        //   sourceBuffer.addEventListener('updateend', () => {
-        //     if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
-        //       mediaSource.endOfStream()
-        //     }
-        //   })
-
-        //   const { data: videoData } = await axios.get(this.videoSource, {
-        //     // headers: {
-        //     //   Range: 'bytes=0-100'
-        //     // },
-        //     responseType: 'arraybuffer'
-        //   })
-        //   console.log(`[LOG]: initPlayer -> videoData`, videoData)
-
-        //   sourceBuffer.appendBuffer(videoData)
-        //   console.log(`[LOG]: initPlayer -> sourceBuffer2`, sourceBuffer)
-        // })
-
         this.player = new ChimeePlayer({
           wrapper: '#video',
           src: this.videoSource,
