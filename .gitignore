@@ -21,3 +21,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+!node_modules/@megvii-video-player
+!node_modules/megvii-http
+!node_modules/megvii-websocket
