@@ -5,13 +5,8 @@
       <a-icon class="close" type="close" @click="$emit('input', null)" />
     </div>
     <div class="content row">
-      <meg-stream-player
-        v-if="isMeg"
-        class="video"
-        title="meg file player"
-        :socket-url="videoSource"
-      >
-      </meg-stream-player>
+      <meg-file-player v-if="isMeg" class="video" title="meg file player" :socket-url="videoSource">
+      </meg-file-player>
       <section
         v-else
         id="video"
